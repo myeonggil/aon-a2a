@@ -1,6 +1,6 @@
 from typing import override
 
-from examples.iac_agent.agent import IaCAgent
+from aon_a2a.cloud_agent.agent import CloudAgent
 
 from a2a.types import (
     TaskArtifactUpdateEvent,
@@ -11,13 +11,14 @@ from a2a.server.events import EventQueue
 from a2a.utils import new_text_artifact
 
 
-class IaCAgentExecutor(AgentExecutor):
+class CloudAgentExecutor(AgentExecutor):
 
     def __init__(self):
-        self.agent = IaCAgent()
+        self.agent = CloudAgent()
 
     @override
-    async def execute(self,
+    async def execute(
+        self,
         context: RequestContext,
         event_queue: EventQueue
     ) -> None:
