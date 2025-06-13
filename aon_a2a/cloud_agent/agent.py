@@ -3,10 +3,10 @@ from typing import AsyncGenerator
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from examples.configs import config
+from aon_a2a.configs import config
 
 
-class IaCAgent:
+class CloudAgent:
     def __init__(self):
         self.model = ChatGroq(
             api_key=config["GROQ_API_KEY"],

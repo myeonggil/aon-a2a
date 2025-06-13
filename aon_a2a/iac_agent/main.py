@@ -1,6 +1,6 @@
 import uvicorn
 
-from examples.iac_agent.agent_executor import IaCAgentExecutor
+from aon_a2a.iac_agent.agent_executor import IaCAgentExecutor
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler

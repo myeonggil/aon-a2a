@@ -1,6 +1,6 @@
 import uvicorn
 
-from examples.cloud_agent.agent_executor import CloudAgentExecutor
+from aon_a2a.cloud_agent.agent_executor import CloudAgentExecutor
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
