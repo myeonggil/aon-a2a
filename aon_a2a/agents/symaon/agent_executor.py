@@ -1,6 +1,6 @@
 from typing import override
 
-from aon_a2a.iac_agent.agent import IaCAgent
+from aon_a2a.agents.symaon.agent import SymaonAgent
 
 from a2a.types import (
     TaskArtifactUpdateEvent,
@@ -11,10 +11,10 @@ from a2a.server.events import EventQueue
 from a2a.utils import new_text_artifact
 
 
-class IaCAgentExecutor(AgentExecutor):
+class SymaonAgentExecutor(AgentExecutor):
 
     def __init__(self):
-        self.agent = IaCAgent()
+        self.agent = SymaonAgent()
 
     @override
     async def execute(

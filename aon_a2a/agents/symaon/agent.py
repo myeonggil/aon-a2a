@@ -6,7 +6,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from aon_a2a.configs import config
 
 
-class CloudAgent:
+class SymaonAgent:
     def __init__(self):
         self.model = ChatGroq(
             api_key=config["GROQ_API_KEY"],
