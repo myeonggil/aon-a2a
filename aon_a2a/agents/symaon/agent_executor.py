@@ -26,6 +26,7 @@ class SymaonAgentExecutor(AgentExecutor):
         if not context.message:
             raise Exception("No message provided")
 
+        # How to divide AsyncGenerator and Response Type?
         async for event in self.agent.stream(context_string=None, query=query):
             message = TaskArtifactUpdateEvent(
                 contextId=context.context_id,

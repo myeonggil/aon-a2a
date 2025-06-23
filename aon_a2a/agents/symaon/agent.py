@@ -47,7 +47,7 @@ class SymaonAgent:
                 yield {'content': chunk.content, 'done': False}
         yield {'content': '', 'done': True}
 
-    async def response(self, context_string: str, query: str) -> str:
+    async def ainvoke(self, context_string: str, query: str) -> str:
         messages = [
             SystemMessage(
                 content=f"""
