@@ -1,7 +1,8 @@
 # Solve problem
 
-1. How to define skill of agent?
-2. How to handle agent host?
- - We have to know hosts relate with agent host
-3. How to route proper agent when input prompt
- - All of result will be combine in main
+- multiagent-orchestration: create and manage multiple agents that can collaborate in realtime
+- Tool Integration: Easily connect agents with external tools and APIs
+- Flexible Workflows: Support both autonomous and human-in-the-loop conversation patterns
+- Code Generation & Execution: Enable agents to write, review, and execute code safely
+
+- https://microsoft.github.io/autogen/0.2/docs/topics/non-openai-models/cloud-groq/
