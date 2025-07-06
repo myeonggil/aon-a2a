@@ -18,6 +18,8 @@ from autogen.coding import LocalCommandLineCodeExecutor
 from aon_a2a.configs import config
 
 # Configure Groq
+# Can I use multiple model?
+# Can I define multiple assistant?
 config_list = [{
     "model": "llama-3.3-70b-versatile",
     "api_key": config.get("GROQ_API_KEY"),
@@ -38,7 +40,7 @@ chatbot = AssistantAgent(
 )
 
 # Define weather tool
-def get_current_weather(location, unit="fahrenheit"):
+def get_current_weather(location: str, unit: str = "fahrenheit"):
     """Get the weather for some location"""
     weather_data = {
         "berlin": {"temperature": "13"},
