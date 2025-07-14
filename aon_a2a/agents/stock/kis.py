@@ -1,71 +1,94 @@
-# from numbers_parser import Document
-# doc = Document("./code.numbers")
-# sheets = doc.sheets
-# tables = sheets[0].tables
-# rows = tables[0].rows()
-# stock_item = rows[1][1].value
-# stock_code = int(rows[1][0].value)
-# market_division = rows[1][2].value
-
-# stock_info = StockInfo(market_division=market_division, stock_code=stock_code)
-# stock = Stock(stock_name=stock_item, stock_info=stock_info)
-# print(stock)
-
-# API
 import requests
+import json
 import asyncio
 
-from aon_a2a.agents.stock.auth import get_auth
-from aon_a2a.database.connection import async_session, AsyncSession
-from aon_a2a.database.schema import User
+from datetime import datetime, timedelta
+
 from aon_a2a.configs import config
-
-from sqlalchemy.future import select
-
+from aon_a2a.agents.stock.repository import UserRepository
 
 
-async def get_price():
-    async with async_session() as session:
-        session: AsyncSession
-        result = await session.execute(select(User).where(User.name == "mgju"))
-        user = result.scalar_one_or_none()
+class KISService:
 
+    def __init__(self, user_repository: UserRepository):
+        self.user_repository = user_repository
+
+    def _get_access_token(self):
+
+        headers = {
+            "content-type": "application/json"
+        }
+        params = {
+            "grant_type": "client_credentials",
+            "appkey": config["STOCK_APP_KEY"], 
+            "appsecret": config["STOCK_APP_SECRET"]
+        }
+        path = "oauth2/tokenP"
+        url = f"{config['STOCK_APP_DOMAIN']}/{path}"
+
+        try:
+            res = requests.post(
+                url=url,
+                headers=headers,
+                data=json.dumps(params)
+            )
+            access_token = res.json()["access_token"]
+        except Exception as err:
+            print("Try after 1 minutes")
+            access_token = None
+        return access_token
+
+    async def get_auth(self) -> str:
+        user = await self.user_repository.get_user()
         if user:
-            # 있으면 업데이트
-            access_token = user.access_token
-            # session.add(user)는 생략 가능
+            if not user.access_token:
+                access_token = self._get_access_token()
+                if access_token:
+                    await self.user_repository.update_user(access_token)
+            elif updated_at := user.updated_at:
+                # TODO: first, check 1 minute
+                # second, check validation
+                time_diff = datetime.now() - updated_at
+                if time_diff >= timedelta(days=1):
+                    access_token = self._get_access_token()
+                    if access_token:
+                        await self.user_repository.update_user(access_token)
+                else:
+                    access_token = user.access_token
+            else:
+                user = await self.user_repository.get_user()
+                access_token = user.access_token
         else:
-            # 없으면 insert
-            access_token = await get_auth()
+            await self.user_repository.create_user()
+            access_token = self._get_access_token()
+            if access_token:
+                await self.user_repository.update_user(access_token)
+        return access_token
 
-    path = "/uapi/domestic-stock/v1/quotations/inquire-price"
-    headers = {
-        "content-type": "application/json; charset=utf-8",
-        "authorization": f"Bearer {access_token}",
-        "appkey": config["STOCK_APP_KEY"],
-        "appsecret": config["STOCK_APP_SECRET"],
-        "tr_id": "FHKST01010100",   # ???
-        "custtype": "P",    # "B" is buessiness
-    }
-    params = {
-        "FID_COND_MRKT_DIV_CODE": "J",  # "J" is KRX, "NX" is NXT, "UN" is 통합
-        "FID_INPUT_ISCD": "005930"    # 종목코드
-    }
+    async def get_price(self, access_token: str, stock_code: str):
+        path = "/uapi/domestic-stock/v1/quotations/inquire-price"
+        headers = {
+            "content-type": "application/json",
+            "authorization": f"Bearer {access_token}",
+            "appkey": config["STOCK_APP_KEY"],
+            "appsecret": config["STOCK_APP_SECRET"],
+            "tr_id": "FHKST01010100",
+            "custtype": "P",    # B business, P Personal
 
-    res = requests.get(
-        url=f"{config['STOCK_APP_DOMAIN']}/{path}",
-        headers=headers,
-        params=params
-    )
+        }
+        params = {
+            "FID_COND_MRKT_DIV_CODE": "J",  # J:KRX, NX:NXT, UN:통합
+            "FID_INPUT_ISCD": stock_code
+        }
 
-    try:
-        result = res.json()
-        if result["msg_cd"] == "EGW00123":
-            await get_auth()
-        print(result)
-    except Exception as err:
-        print(err)
-
-
-if __name__ == '__main__':
-    asyncio.run(get_price())
+        try:
+            res = requests.get(
+                url=f"{config['STOCK_APP_DOMAIN']}/{path}",
+                headers=headers,
+                params=params
+            )
+            result = res.json()
+            from pprint import pprint
+            pprint(result)
+        except Exception as err:
+            print(err)
