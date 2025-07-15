@@ -88,7 +88,18 @@ class KISService:
                 params=params
             )
             result = res.json()
-            from pprint import pprint
-            pprint(result)
         except Exception as err:
             print(err)
+            result = {}
+        return result
+
+
+# async def main():
+#     user_repository = UserRepository()
+#     kis_service = KISService(user_repository)
+#     access_token = await kis_service.get_auth()
+#     result = await kis_service.get_price(access_token, "005930")
+#     print(result)
+
+# if __name__ == '__main__':
+#     asyncio.run(main())
