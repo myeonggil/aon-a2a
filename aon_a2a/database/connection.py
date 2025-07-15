@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from aon_a2a.database.schema import Base, User
+from aon_a2a.database.schema import Base
 
 engine: AsyncEngine = create_async_engine(
     "sqlite+aiosqlite:///./test.db",  # 로컬 SQLite 파일

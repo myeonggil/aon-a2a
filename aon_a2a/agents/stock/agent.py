@@ -143,6 +143,8 @@
 
 from aon_a2a.configs import config
 
+from typing import Annotated, Literal
+
 from autogen import AssistantAgent, UserProxyAgent
 
 
@@ -151,10 +153,36 @@ llm_config = [{
     "api_key": config.get("GROQ_API_KEY"),
     "api_type": "groq"
 }]
-assistant_agent = AssistantAgent(
+assistant = AssistantAgent(
     name="chatbot",
     system_message="""For currency exchange and weather forecasting tasks,
         only use the functions you have been provided with.
         Output 'HAVE FUN!' when an answer has been provided.""",
     llm_config={"config_list": llm_config},
+)
+user_proxy = UserProxyAgent(
+    name="user_proxy",
+    is_termination_msg=lambda x: x.get("content", "") and "HAVE FUN!" in x.get("content", ""),
+    human_input_mode="ALWAYS",
+    code_execution_config=False,
+    max_consecutive_auto_reply=1,
+)
+
+@user_proxy.register_for_execution()
+@assistant.register_for_llm(description="Geo location calculator")
+def get_now_location(location: Annotated[str, "City name"]):
+    print("location")
+
+
+@user_proxy.register_for_execution()
+@assistant.register_for_llm(description="Weather location calculator")
+def get_now_weather(location: Annotated[str, "City name"]):
+    print("weather")
+
+
+res = user_proxy.initiate_chat(
+    assistant,
+    message="You are a helpful AI assistant who can: \
+    - Use weather information tools",
+    summary_method="reflection_with_llm",
 )
