@@ -7,6 +7,9 @@
 import requests
 
 from aon_a2a.configs import config
+from aon_a2a.agents.stock.kis import KISService
+from aon_a2a.agents.stock.naver_news import search_news
+from aon_a2a.agents.stock.repository import UserRepository
 
 from typing import Annotated, Literal, Dict, Any
 from datetime import datetime
@@ -23,6 +26,10 @@ from autogen import (
 from weasyprint import HTML, CSS
 
 
+user_repository = UserRepository()
+kis_service = KISService(user_repository)
+
+
 llm_config = LLMConfig(
     model="llama-3.3-70b-versatile",
     api_key=config.get("GROQ_API_KEY"),
@@ -35,6 +42,8 @@ stock_assistant = AssistantAgent(
     name="stock_assistant",
     system_message="""
         당신은 주식 데이터 수집 전문가입니다.
+        사용자가 요청한 주식의 정보를 가져와서 정리해주세요.
+        get_market_name 함수를 사용하여 주식 아이템에 대한 종목 코드를 얻을 수 있습니다.
         수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
     """,
     llm_config=llm_config,
@@ -43,7 +52,9 @@ stock_assistant = AssistantAgent(
 news_assistant = AssistantAgent(
     name="news_assistant",
     system_message="""
-        당신은 뉴스 수집 전문가입니다.
+        당신은 뉴스 기사 수집 전문가입니다.
+        사용자가 요청한 주식의 정보를 가져와서 관련된 기사를 검색해서 정리해주세요.
+        get_news_event 함수를 사용하여 주식 아이템에 대한 관련된 기사를 검색할 수 있습니다.
         수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
     """,
     llm_config=llm_config,
@@ -53,7 +64,7 @@ generator_assistant = AssistantAgent(
     name="generator_assistant",
     system_message="""
         당신은 pdf파일 생성 전문가입니다.
-        수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
+        수집된 데이터를 PDF 보고서 양식으로 만들어주세요.
     """,
     llm_config=llm_config,
 )
@@ -68,21 +79,29 @@ user_proxy = UserProxyAgent(
 
 @user_proxy.register_for_execution()
 @stock_assistant.register_for_llm(description="Geo location calculator")
-def get_now_location(location: Annotated[str, "City name"]):
-    return f"그 도시 이름은 {location}입니다."
+def get_market_name(
+    stock_item: Annotated[str, "Stock item"],
+    date: Annotated[str, "Duration or specific date"]
+):
+    # You have to get stock code using stock item(name)
+    return
 
 
-@user_proxy.register_for_execution()
-@news_assistant.register_for_llm(description="Weather location calculator")
-def get_now_weather(location: Annotated[str, "City name"]):
-    return f"{location} 날씨는 37도입니다."
+# @user_proxy.register_for_execution()
+# @news_assistant.register_for_llm(description="Weather location calculator")
+# def get_news_event(
+#     stock_item: Annotated[str, "Stock item"],
+#     event: Annotated[str, "Event conversation"]
+# ):
+#     # You have to use search api with stock item and event combination
+#     return
 
 
-@user_proxy.register_for_execution()
-@generator_assistant.register_for_llm(description="PDF information creation")
-def get_pdf_information(pdf_information: Annotated[str, "PDF information"]):
-    data = HTML(string=pdf_information).write_pdf("./report.pdf")
-    return True
+# @user_proxy.register_for_execution()
+# @generator_assistant.register_for_llm(description="PDF information creation")
+# def get_pdf_file(pdf_information: Annotated[str, "PDF information"]):
+#     data = HTML(string=pdf_information).write_pdf("./report.pdf")
+#     return True
 
 
 # 그룹 채팅 생성
