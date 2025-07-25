@@ -21,9 +21,12 @@ from autogen import (
     ConversableAgent,
     register_function,
     GroupChat,
-    GroupChatManager
+    GroupChatManager,
 )
 from weasyprint import HTML, CSS
+from fastapi import FastAPI
+
+app = FastAPI()
 
 
 user_repository = UserRepository()
@@ -43,8 +46,9 @@ stock_assistant = AssistantAgent(
     system_message="""
         당신은 주식 데이터 수집 전문가입니다.
         사용자가 요청한 주식의 정보를 가져와서 정리해주세요.
-        get_market_name 함수를 사용하여 주식 아이템에 대한 종목 코드를 얻을 수 있습니다.
+        get_market_name 함수를 사용하여 주식 아이템(이름)과 요청된 날짜, 기간을 알 수 있습니다.
         수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
+        작업이 종료되면 TERMINATE로 마무리해주세요.
     """,
     llm_config=llm_config,
 )
@@ -56,6 +60,7 @@ news_assistant = AssistantAgent(
         사용자가 요청한 주식의 정보를 가져와서 관련된 기사를 검색해서 정리해주세요.
         get_news_event 함수를 사용하여 주식 아이템에 대한 관련된 기사를 검색할 수 있습니다.
         수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
+        작업이 종료되면 TERMINATE로 마무리해주세요.
     """,
     llm_config=llm_config,
 )
@@ -65,6 +70,7 @@ generator_assistant = AssistantAgent(
     system_message="""
         당신은 pdf파일 생성 전문가입니다.
         수집된 데이터를 PDF 보고서 양식으로 만들어주세요.
+        작업이 종료되면 TERMINATE로 마무리해주세요.
     """,
     llm_config=llm_config,
 )
@@ -79,11 +85,16 @@ user_proxy = UserProxyAgent(
 
 @user_proxy.register_for_execution()
 @stock_assistant.register_for_llm(description="Geo location calculator")
-def get_market_name(
-    stock_item: Annotated[str, "Stock item"],
-    date: Annotated[str, "Duration or specific date"]
+def get_market_trend(
+    stock_item: Annotated[str, "Korean Stock item"],
+    date: Annotated[str, "Specific requested date"] = None,
+    duration: Annotated[str, "How long it lasted"] = None
 ):
     # You have to get stock code using stock item(name)
+    """
+    종목코드를 찾을 수 있다.
+    기간별로 시세를 확인할 수 있다
+    """
     return
 
 
@@ -123,7 +134,7 @@ manager = GroupChatManager(
 res = user_proxy.initiate_chat(
     manager,
     message="""
-        삼성전자의 2024년 6월 주식 동향에 대해 분석해줘
+        삼성전자의 2024년 5월과 6월 주식 동향에 대해 분석해줘
 
         단계:
         1. 수집된 데이터를 사용자 친화적으로 포맷팅
@@ -144,4 +155,5 @@ for msg in group_chat.messages[-3:]:  # 마지막 3개 메시지
 print("!" * 100)
 print("\n\n".join(result_messages))
 print(len(res.chat_history))
+print(res.cost)
 print("!" * 100)

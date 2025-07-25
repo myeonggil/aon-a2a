@@ -5,11 +5,6 @@ from dataclasses import dataclass
 from aon_a2a.configs import config
 
 
-CLIENT_ID = config["NAVER_NEWS_CLIENT_ID"]
-CLIENT_SECRET = config["NAVER_NEWS_CLIENT_SECRET"]
-NAVER_DOMAIN = config["NAVER_NEWS_DOMAIN"]
-
-
 @dataclass
 class SearchRequest:
     query: str = "삼성전자"
@@ -34,19 +29,38 @@ class SearchResponse:
 
 
 def parse_searched_news(news: SearchResponse):
-    pass
+    for item in news.items:
+        print(item.title.replace(
+            "<b>", "").replace(
+            "</b>", "").replace(
+            "&quot;", "\"").replace(
+            "&lt;", "<").replace(
+            "&gt;", ">")
+        )
+        print(item.description.replace(
+            "<b>", "").replace(
+            "</b>", "").replace(
+            "&quot;", "\"").replace(
+            "&lt;", "<").replace(
+            "&gt;", ">")
+        )
 
 
-def search_news():
-    query = "삼성전자"
-    url = f"{NAVER_DOMAIN}query={query}&display=10&start=1&sort=sim"
+def search_news(query: str):
     headers = {
-        "X-Naver-Client-Id": CLIENT_ID,
-        "X-Naver-Client-Secret": CLIENT_SECRET
+        "X-Naver-Client-Id": config["NAVER_NEWS_CLIENT_ID"],
+        "X-Naver-Client-Secret": config["NAVER_NEWS_CLIENT_SECRET"]
+    }
+    params = {
+        "query": query,
+        "display": 10,
+        "start": 1,
+        "sort": "sim"
     }
     res = requests.get(
-        url=url,
-        headers=headers
+        url=config["NAVER_NEWS_DOMAIN"],
+        headers=headers,
+        params=params
     )
     news: SearchResponse = None
     try:
