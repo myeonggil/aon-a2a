@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 @dataclass
 class RequestHeader:
-    content_type: str = None    #컨텐츠타입
+    content_type: str = "application/json"    #컨텐츠타입
     authorization: str = None    #접근토큰
     appkey: str = None    #앱키
     appsecret: str = None    #앱시크릿키
@@ -18,6 +18,24 @@ class RequestHeader:
     ip_addr: Optional[str] = None    #접속 단말 공인 IP
     hashkey: Optional[str] = None    #해쉬키
     gt_uid: Optional[str] = None    #Global UID
+
+    def to_dict(self):
+        return {
+            "content-type": self.content_type,
+            "authorization": f"Bearer {self.authorization}",
+            "appkey": self.appkey,
+            "appsecret": self.appsecret,
+            "personalseckey": self.personalseckey,
+            "tr_id": self.tr_id,
+            "tr_cont": self.tr_cont,
+            "custtype": self.custtype,
+            "seq_no": self.seq_no,
+            "mac_address": self.mac_address,
+            "phone_number": self.phone_number,
+            "ip_addr": self.ip_addr,
+            "hashkey": self.hashkey,
+            "gt_uid": self.gt_uid
+        }
 
 @dataclass
 class RequestQueryParam:
