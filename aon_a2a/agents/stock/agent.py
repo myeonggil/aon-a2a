@@ -44,11 +44,12 @@ llm_config = LLMConfig(
 stock_assistant = AssistantAgent(
     name="stock_assistant",
     system_message="""
-        당신은 주식 데이터 수집 전문가입니다.
-        사용자가 요청한 주식의 정보를 가져와서 정리해주세요.
-        get_market_name 함수를 사용하여 주식 아이템(이름)과 요청된 날짜, 기간을 알 수 있습니다.
-        수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
-        작업이 종료되면 TERMINATE로 마무리해주세요.
+        너는 금융 데이터 분석 전문가야. 유저가 입력한 기업명과 기간을 기준으로 해당 기업의 
+        주가 데이터를 수집하고, 기간 내 최고 상승 구간과 최고 하락 구간을 찾아. 
+        각 구간의 시작일, 종료일, 상승/하락률을 정리해서 출력해줘. 
+        추가로 해당 구간의 기술적 분석도 간단히 포함해줘.
+        get_market_trend 함수를 사용하여 주식 이름과 기간 혹은 날짜를 수집해.
+        작업이 종료되면 TERMINATE로 마무리해줘.
     """,
     llm_config=llm_config,
 )
@@ -56,11 +57,11 @@ stock_assistant = AssistantAgent(
 news_assistant = AssistantAgent(
     name="news_assistant",
     system_message="""
-        당신은 뉴스 기사 수집 전문가입니다.
-        사용자가 요청한 주식의 정보를 가져와서 관련된 기사를 검색해서 정리해주세요.
-        get_news_event 함수를 사용하여 주식 아이템에 대한 관련된 기사를 검색할 수 있습니다.
-        수집된 데이터를 명확하고 읽기 쉽게 포맷팅해주세요.
-        작업이 종료되면 TERMINATE로 마무리해주세요.
+        너는 경제 뉴스 분석 전문가야. 입력된 기업명과 특정 날짜 구간을 기준으로,
+        주가 변화와 관련된 뉴스 기사를 검색하고, 주가 상승 또는 하락의 원인을 설명해주는 기사만 
+        선별해서 정리해줘. 중복되거나 의미 없는 기사는 제외하고 핵심 내용을 요약해줘.
+        get_news_event 함수를 사용하여 주식과 관련된 사건 내용을 수집해.
+        작업이 종료되면 TERMINATE로 마무리해줘.
     """,
     llm_config=llm_config,
 )
@@ -68,9 +69,15 @@ news_assistant = AssistantAgent(
 generator_assistant = AssistantAgent(
     name="generator_assistant",
     system_message="""
-        당신은 pdf파일 생성 전문가입니다.
-        수집된 데이터를 PDF 보고서 양식으로 만들어주세요.
-        작업이 종료되면 TERMINATE로 마무리해주세요.
+        너는 금융 분석 리포트 작성 전문가야. 입력된 주가 분석 정보와 관련 뉴스 요약을 바탕으로 
+        전문적인 PDF 리포트를 작성해줘. 문서는 다음과 같은 구조를 따라:
+        1. 기업 개요
+        2. 분석 대상 기간
+        3. 주가 상승/하락 요약
+        4. 주요 뉴스와 해석
+        5. 결론 및 인사이트
+        리포트는 그래프와 표를 포함하고, 한글 또는 영어로 포맷팅 가능해야 해.
+        작업이 종료되면 TERMINATE로 마무리해줘.
     """,
     llm_config=llm_config,
 )
@@ -86,7 +93,7 @@ user_proxy = UserProxyAgent(
 @user_proxy.register_for_execution()
 @stock_assistant.register_for_llm(description="Geo location calculator")
 def get_market_trend(
-    stock_item: Annotated[str, "Korean Stock item"],
+    stock_item: Annotated[str, "Stock item using Korean"],
     date: Annotated[str, "Specific requested date"] = None,
     duration: Annotated[str, "How long it lasted"] = None
 ):
@@ -98,14 +105,13 @@ def get_market_trend(
     return
 
 
-# @user_proxy.register_for_execution()
-# @news_assistant.register_for_llm(description="Weather location calculator")
-# def get_news_event(
-#     stock_item: Annotated[str, "Stock item"],
-#     event: Annotated[str, "Event conversation"]
-# ):
-#     # You have to use search api with stock item and event combination
-#     return
+@user_proxy.register_for_execution()
+@news_assistant.register_for_llm(description="Weather location calculator")
+def get_news_event(
+    event_conversation: Annotated[str, "Event conversation about stock"]
+):
+    # You have to use search api with stock item and event combination
+    return
 
 
 # @user_proxy.register_for_execution()
@@ -131,6 +137,7 @@ manager = GroupChatManager(
     silent=False
 )
 
+# 프롬프트를 어떻게 작성해야할까? 유저의 입력을 잘 풀어서 설명하는 것이 목표
 res = user_proxy.initiate_chat(
     manager,
     message="""
