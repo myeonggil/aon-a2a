@@ -48,7 +48,8 @@ stock_assistant = AssistantAgent(
         주가 데이터를 수집하고, 기간 내 최고 상승 구간과 최고 하락 구간을 찾아. 
         각 구간의 시작일, 종료일, 상승/하락률을 정리해서 출력해줘. 
         추가로 해당 구간의 기술적 분석도 간단히 포함해줘.
-        get_market_trend 함수를 사용하여 주식 이름과 기간 혹은 날짜를 수집해.
+        get_market_trend 함수를 사용하여 회사의 이름과 날짜나 기간이 확인되면 기간 혹은 날짜를 수집해 
+        날짜 혹은 기간이 확인 되지 않으면 수집하지마.
         작업이 종료되면 TERMINATE로 마무리해줘.
     """,
     llm_config=llm_config,
@@ -60,27 +61,27 @@ news_assistant = AssistantAgent(
         너는 경제 뉴스 분석 전문가야. 입력된 기업명과 특정 날짜 구간을 기준으로,
         주가 변화와 관련된 뉴스 기사를 검색하고, 주가 상승 또는 하락의 원인을 설명해주는 기사만 
         선별해서 정리해줘. 중복되거나 의미 없는 기사는 제외하고 핵심 내용을 요약해줘.
-        get_news_event 함수를 사용하여 주식과 관련된 사건 내용을 수집해.
+        get_news_event 함수를 사용하여 Question: 에 입력된 질문을 요약해서 수집해.
         작업이 종료되면 TERMINATE로 마무리해줘.
     """,
     llm_config=llm_config,
 )
 
-generator_assistant = AssistantAgent(
-    name="generator_assistant",
-    system_message="""
-        너는 금융 분석 리포트 작성 전문가야. 입력된 주가 분석 정보와 관련 뉴스 요약을 바탕으로 
-        전문적인 PDF 리포트를 작성해줘. 문서는 다음과 같은 구조를 따라:
-        1. 기업 개요
-        2. 분석 대상 기간
-        3. 주가 상승/하락 요약
-        4. 주요 뉴스와 해석
-        5. 결론 및 인사이트
-        리포트는 그래프와 표를 포함하고, 한글 또는 영어로 포맷팅 가능해야 해.
-        작업이 종료되면 TERMINATE로 마무리해줘.
-    """,
-    llm_config=llm_config,
-)
+# generator_assistant = AssistantAgent(
+#     name="generator_assistant",
+#     system_message="""
+#         너는 금융 분석 리포트 작성 전문가야. 입력된 주가 분석 정보와 관련 뉴스 요약을 바탕으로 
+#         전문적인 PDF 리포트를 작성해줘. 문서는 다음과 같은 구조를 따라:
+#         1. 기업 개요
+#         2. 분석 대상 기간
+#         3. 주가 상승/하락 요약
+#         4. 주요 뉴스와 해석
+#         5. 결론 및 인사이트
+#         리포트는 그래프와 표를 포함하고, 한글 또는 영어로 포맷팅 가능해야 해.
+#         작업이 종료되면 TERMINATE로 마무리해줘.
+#     """,
+#     llm_config=llm_config,
+# )
 
 user_proxy = UserProxyAgent(
     name="user_proxy",
@@ -91,9 +92,9 @@ user_proxy = UserProxyAgent(
 )
 
 @user_proxy.register_for_execution()
-@stock_assistant.register_for_llm(description="Geo location calculator")
+@stock_assistant.register_for_llm(description="Stock price calculator")
 def get_market_trend(
-    stock_item: Annotated[str, "Stock item using Korean"],
+    stock_item: Annotated[str, "Company name to Korea language"],
     date: Annotated[str, "Specific requested date"] = None,
     duration: Annotated[str, "How long it lasted"] = None
 ):
@@ -106,9 +107,9 @@ def get_market_trend(
 
 
 @user_proxy.register_for_execution()
-@news_assistant.register_for_llm(description="Weather location calculator")
+@news_assistant.register_for_llm(description="Stock news collector")
 def get_news_event(
-    event_conversation: Annotated[str, "Event conversation about stock"]
+    summary: Annotated[str, "Question summary to Korea language"]
 ):
     # You have to use search api with stock item and event combination
     return
@@ -123,7 +124,7 @@ def get_news_event(
 
 # 그룹 채팅 생성
 group_chat = GroupChat(
-    agents=[user_proxy, stock_assistant, news_assistant, generator_assistant],
+    agents=[user_proxy, stock_assistant, news_assistant],
     messages=[],
     max_round=10,
     allow_repeat_speaker=False,
@@ -141,11 +142,13 @@ manager = GroupChatManager(
 res = user_proxy.initiate_chat(
     manager,
     message="""
-        삼성전자의 2024년 5월과 6월 주식 동향에 대해 분석해줘
+        너는 주식시장과 관련된 기사를 찾아서 보고서 형태의 PDF를 잘 만드는 어시스턴트야.
+        아래의 규칙을 반드시 지키고 Question: 에 입력된 질문에 대해 답변을 해야해.
 
-        단계:
-        1. 수집된 데이터를 사용자 친화적으로 포맷팅
-        2. 날씨 상황에 맞는 조언 제공
+        다음 규칙은 반드시 지켜야해:
+        - 수집된 데이터를 사용자 친화적으로 포맷팅
+
+        Question: 2023년부터 2년동안 삼성전자 주식에 관련된 데이터와 뉴스 기사에 대해 분석해줘
 
         완료되면 TERMINATE로 마무리해주세요.
     """,
@@ -156,7 +159,7 @@ res = user_proxy.initiate_chat(
 
 result_messages = []
 for msg in group_chat.messages[-3:]:  # 마지막 3개 메시지
-    if msg.get("name") in ["chatbot"]:
+    if msg.get("name") in ["stock_assistant", "news_assistant", "generator_assistant"]:
         result_messages.append(f"{msg['name']}: {msg['content']}")
 
 print("!" * 100)
