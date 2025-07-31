@@ -94,11 +94,11 @@ user_proxy = UserProxyAgent(
 @user_proxy.register_for_execution()
 @stock_assistant.register_for_llm(description="Stock price calculator")
 def get_market_trend(
-    stock_item: Annotated[str, "Company name to Korea language"],
+    stock_name: Annotated[str, "Company name to Korea language"],
     date: Annotated[str, "Specific requested date"] = None,
     duration: Annotated[str, "How long it lasted"] = None
 ):
-    # You have to get stock code using stock item(name)
+    # You have to get stock code using stock name(name)
     """
     종목코드를 찾을 수 있다.
     기간별로 시세를 확인할 수 있다

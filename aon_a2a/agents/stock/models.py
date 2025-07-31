@@ -37,6 +37,21 @@ class RequestHeader:
             "gt_uid": self.gt_uid
         }
 
+
+@dataclass
+class NumbersDocument:
+    stock_code: str
+    stock_name: str
+    market_division: str
+
+    def to_dict(self):
+        return {
+            "stock_code": self.stock_code,
+            "stock_name": self.stock_name,
+            "market_division": self.market_division
+        }
+
+
 @dataclass
 class RequestQueryParam:
     FID_COND_MRKT_DIV_CODE: str = None    #조건 시장 분류 코드
@@ -48,7 +63,8 @@ class StockInfo:
     market_division: str = None # ex) KOSDAQ, KOSPI
     stock_code: int = 0 # Number of specific stock
 
+
 @dataclass
 class Stock:
-    stock_item: str = None  # Name of stock
+    stock_name: str = None  # Name of stock
     stock_info: StockInfo = None
