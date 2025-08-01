@@ -5,8 +5,16 @@ import asyncio
 from datetime import datetime, timedelta
 
 from aon_a2a.configs import config
-from aon_a2a.agents.stock.models import RequestHeader
-from aon_a2a.agents.stock.repository import UserRepository
+from aon_a2a.agents.stock.models import (
+    RequestHeader,
+    StockInfo,
+    ResponseBody,
+    ResponseBodyoutput
+)
+from aon_a2a.agents.stock.repositories import (
+    UserRepository,
+    StockRepository
+)
 
 
 class KISService:
@@ -88,10 +96,11 @@ class KISService:
                 params=params
             )
             result = res.json()
+            output = ResponseBodyoutput(**result["output"])
         except Exception as err:
             print(err)
-            result = {}
-        return result
+            output = {}
+        return output
 
     async def get_lasted_date_price(self,
         access_token: str,
@@ -132,6 +141,23 @@ class KISService:
             print(err)
             result = {}
         return result
+
+
+class StockService:
+    def __init__(self, stock_repository: StockRepository):
+        self.stock_repository = stock_repository
+
+    async def get_stock_code_by_name(self, stock_name: str) -> StockInfo:
+        if not stock_name:
+            raise Exception("Check the name")
+
+        raw_stock = await self.stock_repository.get_stock_by_name(stock_name)
+        stock = StockInfo(
+            stock_name=raw_stock.stock_name,
+            stock_code=raw_stock.stock_code,
+            market_division=raw_stock.market_division
+        )
+        return stock
 
 
 # async def main():
