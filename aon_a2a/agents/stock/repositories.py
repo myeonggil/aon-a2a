@@ -1,6 +1,6 @@
 from aon_a2a.database.connection import async_session, AsyncSession
 from aon_a2a.database.schema import User, Stock
-from aon_a2a.agents.stock.models import NumbersDocument
+from aon_a2a.agents.stock.models import StockInfo
 
 from datetime import datetime
 
@@ -48,7 +48,7 @@ class StockRepository:
     def __init__(self):
         self.async_session = async_session
 
-    async def create_stock(self, stock_infos: list[NumbersDocument]):
+    async def create_stock(self, stock_infos: list[StockInfo]):
         async with async_session() as session:
             session: AsyncSession
             for stock_info in stock_infos:
@@ -61,10 +61,17 @@ class StockRepository:
             await session.commit()
             print("➕ 주식 추가됨")
     
-    async def get_stock(self, stock_code: str) -> Stock:
+    async def get_stock_by_code(self, stock_code: str) -> Stock:
         async with async_session() as session:
             session: AsyncSession
             result = await session.execute(select(Stock).where(Stock.stock_code == stock_code))
+            stock = result.scalar_one_or_none()
+            return stock
+
+    async def get_stock_by_name(self, stock_name: str) -> Stock:
+        async with async_session() as session:
+            session: AsyncSession
+            result = await session.execute(select(Stock).where(Stock.stock_name == stock_name))
             stock = result.scalar_one_or_none()
             return stock
 

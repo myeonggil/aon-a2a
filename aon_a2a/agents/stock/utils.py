@@ -1,11 +1,11 @@
-from aon_a2a.agents.stock.models import NumbersDocument
+from aon_a2a.agents.stock.models import StockInfo
 
 from numbers_parser import Document
 
 from dataclasses import dataclass
 
 
-def load_numbers_file(path: str = "./code.numbers") -> list[NumbersDocument]:
+def load_numbers_file(path: str = "./code.numbers") -> list[StockInfo]:
     doc = Document(path)
     sheets = doc.sheets
     tables = sheets[0].tables
@@ -18,7 +18,7 @@ def load_numbers_file(path: str = "./code.numbers") -> list[NumbersDocument]:
             row[1].value,
             row[2].value
         )
-        numbers_doc = NumbersDocument(
+        numbers_doc = StockInfo(
             stock_code=stock_code,
             stock_name=stock_name,
             market_division=market_division

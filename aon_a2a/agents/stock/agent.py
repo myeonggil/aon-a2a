@@ -4,12 +4,18 @@
 # Third, Is possible News API?
 # Fourth, Is possible checking volatility?
 # Last, Is possible reporting of result?
-import requests
 
 from aon_a2a.configs import config
-from aon_a2a.agents.stock.kis import KISService
+from aon_a2a.agents.stock.service import (
+    KISService,
+    StockService
+)
 from aon_a2a.agents.stock.naver_news import search_news
-from aon_a2a.agents.stock.repository import UserRepository
+from aon_a2a.agents.stock.repositories import (
+    UserRepository,
+    StockRepository
+)
+from aon_a2a.agents.stock.models import AssistantPrompt
 
 from typing import Annotated, Literal, Dict, Any
 from datetime import datetime
@@ -30,7 +36,9 @@ app = FastAPI()
 
 
 user_repository = UserRepository()
+stock_repository = StockRepository()
 kis_service = KISService(user_repository)
+stock_service = StockService(stock_repository)
 
 
 llm_config = LLMConfig(
@@ -93,7 +101,7 @@ user_proxy = UserProxyAgent(
 
 @user_proxy.register_for_execution()
 @stock_assistant.register_for_llm(description="Stock price calculator")
-def get_market_trend(
+async def get_market_trend(
     stock_name: Annotated[str, "Company name to Korea language"],
     date: Annotated[str, "Specific requested date"] = None,
     duration: Annotated[str, "How long it lasted"] = None
@@ -103,12 +111,15 @@ def get_market_trend(
     종목코드를 찾을 수 있다.
     기간별로 시세를 확인할 수 있다
     """
+    access_token = await kis_service.get_auth()
+    stock = await stock_service.get_stock_code_by_name(stock_name)
+    results = await kis_service.get_last_date_price(access_token, stock.stock_code)
     return
 
 
 @user_proxy.register_for_execution()
 @news_assistant.register_for_llm(description="Stock news collector")
-def get_news_event(
+async def get_news_event(
     summary: Annotated[str, "Question summary to Korea language"]
 ):
     # You have to use search api with stock item and event combination
@@ -117,7 +128,7 @@ def get_news_event(
 
 # @user_proxy.register_for_execution()
 # @generator_assistant.register_for_llm(description="PDF information creation")
-# def get_pdf_file(pdf_information: Annotated[str, "PDF information"]):
+# async def get_pdf_file(pdf_information: Annotated[str, "PDF information"]):
 #     data = HTML(string=pdf_information).write_pdf("./report.pdf")
 #     return True
 
