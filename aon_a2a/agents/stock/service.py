@@ -164,14 +164,15 @@ class StockService:
 #     user_repository = UserRepository()
 #     kis_service = KISService(user_repository)
 #     access_token = await kis_service.get_auth()
-#     # result = await kis_service.get_last_date_price(access_token, "005930")
-#     result = await kis_service.get_lasted_date_price(
-#         access_token=access_token,
-#         stock_code="005930",
-#         start_date="20250701",
-#         end_date="20250720",
-#         duration="D"
-#     )
+#     result = await kis_service.get_last_date_price(access_token, "005930")
+#     print(result.stck_prpr)
+#     # result = await kis_service.get_lasted_date_price(
+#     #     access_token=access_token,
+#     #     stock_code="005930",
+#     #     start_date="20250701",
+#     #     end_date="20250720",
+#     #     duration="D"
+#     # )
 #     print(result)
 
 # if __name__ == '__main__':

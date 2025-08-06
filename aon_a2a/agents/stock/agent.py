@@ -58,7 +58,7 @@ stock_assistant = AssistantAgent(
         추가로 해당 구간의 기술적 분석도 간단히 포함해줘.
         get_market_trend 함수를 사용하여 회사의 이름과 날짜나 기간이 확인되면 기간 혹은 날짜를 수집해 
         날짜 혹은 기간이 확인 되지 않으면 수집하지마.
-        작업이 종료되면 TERMINATE로 마무리해줘.
+        결과를 요약하고 마지막에 TERMINATE로 마무리해.
     """,
     llm_config=llm_config,
 )
@@ -70,7 +70,7 @@ news_assistant = AssistantAgent(
         주가 변화와 관련된 뉴스 기사를 검색하고, 주가 상승 또는 하락의 원인을 설명해주는 기사만 
         선별해서 정리해줘. 중복되거나 의미 없는 기사는 제외하고 핵심 내용을 요약해줘.
         get_news_event 함수를 사용하여 Question: 에 입력된 질문을 요약해서 수집해.
-        작업이 종료되면 TERMINATE로 마무리해줘.
+        결과를 요약하고 마지막에 TERMINATE로 마무리해.
     """,
     llm_config=llm_config,
 )
@@ -113,8 +113,14 @@ async def get_market_trend(
     """
     access_token = await kis_service.get_auth()
     stock = await stock_service.get_stock_code_by_name(stock_name)
-    results = await kis_service.get_last_date_price(access_token, stock.stock_code)
-    return
+    results = await kis_service.get_last_date_price(access_token, f"00{stock.stock_code}")
+    prompt = AssistantPrompt.market_trend.format(
+        stock_name=stock_name,
+        w52_lwpr=results.w52_lwpr,
+        w52_hgpr=results.w52_hgpr,
+        stck_prpr=results.stck_prpr,
+    )
+    return prompt
 
 
 @user_proxy.register_for_execution()
@@ -122,8 +128,8 @@ async def get_market_trend(
 async def get_news_event(
     summary: Annotated[str, "Question summary to Korea language"]
 ):
-    # You have to use search api with stock item and event combination
-    return
+    prompt = AssistantPrompt.news_analysis.format(content=summary)
+    return prompt
 
 
 # @user_proxy.register_for_execution()
@@ -154,14 +160,14 @@ res = user_proxy.initiate_chat(
     manager,
     message="""
         너는 주식시장과 관련된 기사를 찾아서 보고서 형태의 PDF를 잘 만드는 어시스턴트야.
-        아래의 규칙을 반드시 지키고 Question: 에 입력된 질문에 대해 답변을 해야해.
+        아래의 규칙을 반드시 지키고 <query></query>사이에 입력된 질문에 대해 답변을 해야해.
 
         다음 규칙은 반드시 지켜야해:
         - 수집된 데이터를 사용자 친화적으로 포맷팅
 
-        Question: 2023년부터 2년동안 삼성전자 주식에 관련된 데이터와 뉴스 기사에 대해 분석해줘
+        <query>2023년부터 2년동안 삼성전자 주식에 관련된 데이터와 뉴스 기사에 대해 분석해줘</query>
 
-        완료되면 TERMINATE로 마무리해주세요.
+        결과를 요약하고 마지막에 TERMINATE로 마무리해.
     """,
     # summary_method="reflection_with_llm",
     # summary_method="last_msg",
