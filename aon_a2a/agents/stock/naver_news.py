@@ -28,22 +28,11 @@ class SearchResponse:
     items: list[SearchItem]
 
 
-def parse_searched_news(news: SearchResponse):
+def extract_content(news: SearchResponse):
+    results = []
     for item in news.items:
-        print(item.title.replace(
-            "<b>", "").replace(
-            "</b>", "").replace(
-            "&quot;", "\"").replace(
-            "&lt;", "<").replace(
-            "&gt;", ">")
-        )
-        print(item.description.replace(
-            "<b>", "").replace(
-            "</b>", "").replace(
-            "&quot;", "\"").replace(
-            "&lt;", "<").replace(
-            "&gt;", ">")
-        )
+        results.append(item.description)
+    return "\n".join(results)
 
 
 def search_news(query: str):
@@ -70,11 +59,21 @@ def search_news(query: str):
         search_items: list[SearchItem] = []
         for item in items:
             search_item = SearchItem(
-                description=item["description"],
+                description=item["description"].replace(
+                    "<b>", "").replace(
+                    "</b>", "").replace(
+                    "&quot;", "\"").replace(
+                    "&lt;", "<").replace(
+                    "&gt;", ">"),
                 link=item["link"],
                 originallink=item["originallink"],
                 pubDate=item["pubDate"],
-                title=item["title"]
+                title=item["title"].replace(
+                    "<b>", "").replace(
+                    "</b>", "").replace(
+                    "&quot;", "\"").replace(
+                    "&lt;", "<").replace(
+                    "&gt;", ">")
             )
             search_items.append(search_item)
         news = SearchResponse(
