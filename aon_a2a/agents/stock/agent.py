@@ -10,7 +10,10 @@ from aon_a2a.agents.stock.service import (
     KISService,
     StockService
 )
-from aon_a2a.agents.stock.naver_news import search_news
+from aon_a2a.agents.stock.naver_news import (
+    search_news,
+    extract_content
+)
 from aon_a2a.agents.stock.repositories import (
     UserRepository,
     StockRepository
@@ -45,8 +48,11 @@ llm_config = LLMConfig(
     model="llama-3.3-70b-versatile",
     api_key=config.get("GROQ_API_KEY"),
     api_type="groq",
-    max_tokens=1000,
-    stream=True
+    max_tokens=1500,
+    stream=True,
+    top_p=0.9,
+    # frequency_penalty=0,
+    # presence_penalty=0
 )
 
 stock_assistant = AssistantAgent(
@@ -56,9 +62,7 @@ stock_assistant = AssistantAgent(
         주가 데이터를 수집하고, 기간 내 최고 상승 구간과 최고 하락 구간을 찾아. 
         각 구간의 시작일, 종료일, 상승/하락률을 정리해서 출력해줘. 
         추가로 해당 구간의 기술적 분석도 간단히 포함해줘.
-        get_market_trend 함수를 사용하여 회사의 이름과 날짜나 기간이 확인되면 기간 혹은 날짜를 수집해 
-        날짜 혹은 기간이 확인 되지 않으면 수집하지마.
-        결과를 요약하고 마지막에 TERMINATE로 마무리해.
+        get_market_trend 함수를 사용하여 회사의 이름과 날짜나 기간이 확인되면 기간 혹은 날짜를 수집해줘.
     """,
     llm_config=llm_config,
 )
@@ -69,8 +73,7 @@ news_assistant = AssistantAgent(
         너는 경제 뉴스 분석 전문가야. 입력된 기업명과 특정 날짜 구간을 기준으로,
         주가 변화와 관련된 뉴스 기사를 검색하고, 주가 상승 또는 하락의 원인을 설명해주는 기사만 
         선별해서 정리해줘. 중복되거나 의미 없는 기사는 제외하고 핵심 내용을 요약해줘.
-        get_news_event 함수를 사용하여 Question: 에 입력된 질문을 요약해서 수집해.
-        결과를 요약하고 마지막에 TERMINATE로 마무리해.
+        get_news_event 함수를 사용하여 <query></query>에 입력된 질문을 요약해서 수집해.
     """,
     llm_config=llm_config,
 )
@@ -86,7 +89,6 @@ news_assistant = AssistantAgent(
 #         4. 주요 뉴스와 해석
 #         5. 결론 및 인사이트
 #         리포트는 그래프와 표를 포함하고, 한글 또는 영어로 포맷팅 가능해야 해.
-#         작업이 종료되면 TERMINATE로 마무리해줘.
 #     """,
 #     llm_config=llm_config,
 # )
@@ -126,9 +128,11 @@ async def get_market_trend(
 @user_proxy.register_for_execution()
 @news_assistant.register_for_llm(description="Stock news collector")
 async def get_news_event(
-    summary: Annotated[str, "Question summary to Korea language"]
+    summary: Annotated[str, "Keyword to Korea language correctly"]
 ):
-    prompt = AssistantPrompt.news_analysis.format(content=summary)
+    news = search_news(summary)
+    content = extract_content(news)
+    prompt = AssistantPrompt.news_analysis.format(content=content)
     return prompt
 
 
@@ -163,24 +167,26 @@ res = user_proxy.initiate_chat(
         아래의 규칙을 반드시 지키고 <query></query>사이에 입력된 질문에 대해 답변을 해야해.
 
         다음 규칙은 반드시 지켜야해:
-        - 수집된 데이터를 사용자 친화적으로 포맷팅
+        1. 절대로 빈 응답을 하지 마세요
+        2. "TERMINATE"라고 말하지 마세요 (명시적으로 대화 종료를 요청받지 않는 한)
+        3. 모르는 것이 있어도 관련된 정보나 추측을 제공하세요
+        4. 항상 구체적이고 유용한 답변을 제공하세요
+        5. 불확실한 경우에도 "확실하지 않지만..." 으로 시작하여 답변하세요
 
         <query>2023년부터 2년동안 삼성전자 주식에 관련된 데이터와 뉴스 기사에 대해 분석해줘</query>
-
-        결과를 요약하고 마지막에 TERMINATE로 마무리해.
     """,
     # summary_method="reflection_with_llm",
     # summary_method="last_msg",
-    # max_turns=1
+    # max_turns=10
 )
 
-result_messages = []
-for msg in group_chat.messages[-3:]:  # 마지막 3개 메시지
-    if msg.get("name") in ["stock_assistant", "news_assistant", "generator_assistant"]:
-        result_messages.append(f"{msg['name']}: {msg['content']}")
+# result_messages = []
+# for msg in group_chat.messages[-3:]:  # 마지막 3개 메시지
+#     if msg.get("name") in ["stock_assistant", "news_assistant", "generator_assistant"]:
+#         result_messages.append(f"{msg['name']}: {msg['content']}")
 
-print("!" * 100)
-print("\n\n".join(result_messages))
-print(len(res.chat_history))
-print(res.cost)
-print("!" * 100)
+# print("!" * 100)
+# print("\n\n".join(result_messages))
+# print(len(res.chat_history))
+# # print(res.cost)
+# print("!" * 100)
