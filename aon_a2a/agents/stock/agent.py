@@ -33,9 +33,6 @@ from autogen import (
     GroupChatManager,
 )
 from weasyprint import HTML, CSS
-from fastapi import FastAPI
-
-app = FastAPI()
 
 
 user_repository = UserRepository()
@@ -63,6 +60,7 @@ stock_assistant = AssistantAgent(
         각 구간의 시작일, 종료일, 상승/하락률을 정리해서 출력해줘. 
         추가로 해당 구간의 기술적 분석도 간단히 포함해줘.
         get_market_trend 함수를 사용하여 회사의 이름과 날짜나 기간이 확인되면 기간 혹은 날짜를 수집해줘.
+        작업이 끝나면 TERMINATE로 답변해줘.
     """,
     llm_config=llm_config,
 )
@@ -74,6 +72,7 @@ news_assistant = AssistantAgent(
         주가 변화와 관련된 뉴스 기사를 검색하고, 주가 상승 또는 하락의 원인을 설명해주는 기사만 
         선별해서 정리해줘. 중복되거나 의미 없는 기사는 제외하고 핵심 내용을 요약해줘.
         get_news_event 함수를 사용하여 <query></query>에 입력된 질문을 요약해서 수집해.
+        작업이 끝나면 TERMINATE로 답변해줘.
     """,
     llm_config=llm_config,
 )
@@ -95,7 +94,7 @@ news_assistant = AssistantAgent(
 
 user_proxy = UserProxyAgent(
     name="user_proxy",
-    is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE"),
+    is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
     human_input_mode="NEVER",
     code_execution_config=False,
     max_consecutive_auto_reply=10,
@@ -148,7 +147,7 @@ group_chat = GroupChat(
     agents=[user_proxy, stock_assistant, news_assistant],
     messages=[],
     max_round=10,
-    allow_repeat_speaker=False,
+    allow_repeat_speaker=True,
     # speaker_selection_method="round_robin"
 )
 
@@ -156,7 +155,7 @@ group_chat = GroupChat(
 manager = GroupChatManager(
     groupchat=group_chat,
     llm_config=llm_config,
-    silent=False
+    silent=True
 )
 
 # 프롬프트를 어떻게 작성해야할까? 유저의 입력을 잘 풀어서 설명하는 것이 목표
