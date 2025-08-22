@@ -1,4 +1,7 @@
 import asyncio
+
+from typing import AsyncGenerator, Any
+
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +14,17 @@ engine: AsyncEngine = create_async_engine(
     # echo=True,
 )
 async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+
+
+async def get_session() -> AsyncGenerator[AsyncSession]:
+    async with async_session() as session:
+        session: AsyncSession
+        try:
+            yield session
+            await session.commit()
+        except Exception as err:
+            print(err)
+            await session.rollback()
 
 
 async def create_tables():
