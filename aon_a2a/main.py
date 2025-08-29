@@ -1,55 +1,51 @@
-import msgspec
-
-from typing import Annotated, Optional, Any
-from dataclasses import dataclass
+from typing import Any
 
 from aon_a2a.database.connection import AsyncSession, get_session
-from aon_a2a.auth import validate_authentication
+from aon_a2a.auth import MyAuthenticationMiddleware, DefineMiddleware
+from aon_a2a.models import User, AuthResponse, ChatResponse
+from aon_a2a.utils import create_token
 
 from litestar import Litestar, get, post, Controller, Request
-from litestar.security.jwt import JWTAuth, Token
-from litestar.dto import MsgspecDTO
-from litestar.params import Parameter
 from litestar.di import Provide
 
 # Litestar - manual auth setup
 
-
-@dataclass
-class CustomToken(Token):
-    token_flag: bool = False
-
-
-class Inside(msgspec.Struct):
-    name: Optional[str] = None
-
-
-class Response(msgspec.Struct):
-    content: str
-
-
-class RequestResponse(Controller):
+class AonA2A(Controller):
 
     path = "/test"
 
     @get(
-        path="/inside",
+        path="/login",
         dependencies={
-            "is_valid": Provide(validate_authentication),
             "session": Provide(get_session)
-        }
+        },
     )
-    async def inside(
+    async def get_auth_token(
         self,
-        name: str,
+        email: str,
         session: AsyncSession,
-        is_valid: bool = False
-    ) -> Response:
-        return Response(content="Hello World!")
+    ) -> AuthResponse:
+        print(email)
+        if not email:
+            raise Exception("Email")
 
-    @post(path="/outside")
-    async def outside(self, request: Request) -> Response:
-        return Response(content="Hello World!")
+        token = create_token(1, "mgju")
+        return AuthResponse(token=token)
+
+    @post(
+        path="/chat",
+        dependencies={
+            "session": Provide(get_session)
+        },
+        middleware=[DefineMiddleware(MyAuthenticationMiddleware, exclude="schema")]
+    )
+    async def chat_with_bot(
+        self,
+        request: Request[User, Any, Any],
+        session: AsyncSession,
+    ) -> ChatResponse:
+        user = request.user
+        return ChatResponse(content="Hello World!")
 
 
-app = Litestar(route_handlers=[RequestResponse])
+app = Litestar(route_handlers=[AonA2A])
