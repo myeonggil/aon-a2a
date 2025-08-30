@@ -11,7 +11,7 @@ from aon_a2a.configs import config
 import jwt, time
 
 
-class MyAuthenticationMiddleware(AbstractAuthenticationMiddleware):
+class AONAuthenticationMiddleware(AbstractAuthenticationMiddleware):
     async def authenticate_request(
         self,
         connection: ASGIConnection

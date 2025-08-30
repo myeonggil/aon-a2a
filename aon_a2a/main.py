@@ -1,16 +1,21 @@
+import asyncio
+
 from typing import Any
 
 from aon_a2a.database.connection import AsyncSession, get_session
-from aon_a2a.auth import MyAuthenticationMiddleware, DefineMiddleware
+from aon_a2a.auth import AONAuthenticationMiddleware
 from aon_a2a.models import User, AuthResponse, ChatResponse
 from aon_a2a.utils import create_token
 
 from litestar import Litestar, get, post, Controller, Request
+from litestar.middleware import DefineMiddleware
+from litestar.response import Stream
+from litestar.serialization import encode_msgpack
 from litestar.di import Provide
 
 # Litestar - manual auth setup
 
-class AonA2A(Controller):
+class AONA2A(Controller):
 
     path = "/test"
 
@@ -25,7 +30,6 @@ class AonA2A(Controller):
         email: str,
         session: AsyncSession,
     ) -> AuthResponse:
-        print(email)
         if not email:
             raise Exception("Email")
 
@@ -37,9 +41,9 @@ class AonA2A(Controller):
         dependencies={
             "session": Provide(get_session)
         },
-        middleware=[DefineMiddleware(MyAuthenticationMiddleware, exclude="schema")]
+        middleware=[DefineMiddleware(AONAuthenticationMiddleware, exclude="schema")]
     )
-    async def chat_with_bot(
+    async def response_chat(
         self,
         request: Request[User, Any, Any],
         session: AsyncSession,
@@ -47,5 +51,25 @@ class AonA2A(Controller):
         user = request.user
         return ChatResponse(content="Hello World!")
 
+    @post(
+        path="/stream",
+        dependencies={
+            "session": Provide(get_session)
+        },
+        middleware=[DefineMiddleware(AONAuthenticationMiddleware, exclude="schema")]
+    )
+    async def stream_chat(
+        self,
+        request: Request[User, Any, Any],
+        session: AsyncSession,
+    ) -> Stream:
+        user = request.user
+        async def my_generator():
+            res = "hello world"
+            for t in res:
+                await asyncio.sleep(0.01)
+                yield encode_msgpack({"current_time": 10})
+        return Stream(my_generator(), media_type="text/plain")
 
-app = Litestar(route_handlers=[AonA2A])
+
+app = Litestar(route_handlers=[AONA2A])
