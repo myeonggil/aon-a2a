@@ -23,14 +23,14 @@ starlette = ">=0.46.2"
 
 [[package]]
 name = "ag2"
-version = "0.9.3"
+version = "0.9.9"
 description = "A programming framework for agentic AI"
 optional = false
-python-versions = "<3.14,>=3.9"
+python-versions = "<3.14,>=3.10"
 groups = ["main"]
 files = [
-    {file = "ag2-0.9.3-py3-none-any.whl", hash = "sha256:95ff1b7a3582c0dad60e0b9049a15a3a49729a2f35c000217a8d98f86eed2560"},
-    {file = "ag2-0.9.3.tar.gz", hash = "sha256:c48cf5c91a13a01fe801df3760e5f69a0b8e8f7b74f87a453a2e1716750a82b8"},
+    {file = "ag2-0.9.9-py3-none-any.whl", hash = "sha256:833aeb65d657fd2cb2f8686bab9c0c3ae0b8c806c0e76b670756bd3d8d0b21ea"},
+    {file = "ag2-0.9.9.tar.gz", hash = "sha256:33200ded8c60a4c181061632ed38f79e34b87197fc49acebb81d9afc29f70439"},
 ]
 
 [package.dependencies]
@@ -47,21 +47,21 @@ tiktoken = "*"
 
 [package.extras]
 anthropic = ["anthropic[vertex] (>=0.23.1)"]
-autobuild = ["chromadb", "huggingface-hub", "sentence-transformers (<=4.1.0)"]
+autobuild = ["chromadb", "huggingface-hub", "sentence-transformers (<=5.1.0)"]
 bedrock = ["boto3 (>=1.34.149)"]
 blendsearch = ["flaml[blendsearch]"]
 browser-use = ["browser-use (==0.1.37)"]
-captainagent = ["chromadb", "huggingface-hub", "pandas", "sentence-transformers (<=4.1.0)"]
+captainagent = ["chromadb", "huggingface-hub", "pandas", "sentence-transformers (<=5.1.0)"]
 cerebras = ["cerebras-cloud-sdk (>=1.0.0)"]
 cohere = ["cohere (>=5.13.5)"]
 commsagent-discord = ["discord-py (>=2.4.0,<2.6)"]
 commsagent-slack = ["slack-sdk (>=3.33.0,<3.40)"]
 commsagent-telegram = ["telethon (>=1.38.1,<2)"]
 cosmosdb = ["azure-cosmos (>=4.2.0)"]
-crawl4ai = ["crawl4ai (>=0.4.247,<0.5)"]
-deepseek = ["openai (>=1.87.0)"]
-dev = ["cairosvg", "codespell (==2.4.1)", "detect-secrets (==1.5.0)", "dirty-equals (==0.9.0)", "fastapi (==0.115.12)", "ipykernel (==6.29.5)", "jinja2 (==3.1.6)", "mdx-include (==1.4.2)", "mike (==2.1.3)", "mkdocs-git-revision-date-localized-plugin (==1.3.0)", "mkdocs-glightbox (==0.4.0)", "mkdocs-literate-nav (==0.6.2)", "mkdocs-macros-plugin (==1.3.7)", "mkdocs-material (==9.6.12)", "mkdocs-minify-plugin (==0.8.0)", "mkdocs-redirects (==1.2.2)", "mkdocstrings[python] (==0.29.1)", "mock (==5.2.0)", "mypy (==1.15.0)", "nbclient (==0.10.2)", "nbconvert (==7.16.6)", "nbformat (==5.10.4)", "openai (>=1.87.0)", "pandas (==2.2.3)", "pdoc3 (==0.11.6)", "pillow", "pre-commit (==4.2.0)", "pytest (==8.3.5)", "pytest-asyncio (==0.26.0)", "pytest-cov (==6.1.1)", "pyupgrade-directories (==0.3.0)", "pyyaml (==6.0.2)", "ruff (==0.11.6)", "termcolor (==3.0.1)", "toml (==0.10.2)", "typer (==0.15.2)", "uv (==0.6.14)"]
-docs = ["cairosvg", "jinja2 (==3.1.6)", "mdx-include (==1.4.2)", "mike (==2.1.3)", "mkdocs-git-revision-date-localized-plugin (==1.3.0)", "mkdocs-glightbox (==0.4.0)", "mkdocs-literate-nav (==0.6.2)", "mkdocs-macros-plugin (==1.3.7)", "mkdocs-material (==9.6.12)", "mkdocs-minify-plugin (==0.8.0)", "mkdocs-redirects (==1.2.2)", "mkdocstrings[python] (==0.29.1)", "nbclient (==0.10.2)", "pdoc3 (==0.11.6)", "pillow", "pyyaml (==6.0.2)", "termcolor (==3.0.1)", "typer (==0.15.2)"]
+crawl4ai = ["crawl4ai (>=0.4.247,<0.8)"]
+deepseek = ["openai (>=1.99.3)"]
+dev = ["cairosvg", "codespell (==2.4.1)", "detect-secrets (==1.5.0)", "dirty-equals (==0.9.0)", "fastapi (==0.116.1)", "ipykernel (==6.30.1)", "jinja2 (==3.1.6)", "mcp (>=1.11.0)", "mdx-include (==1.4.2)", "mike (==2.1.3)", "mkdocs-git-revision-date-localized-plugin (==1.4.7)", "mkdocs-glightbox (==0.4.0)", "mkdocs-literate-nav (==0.6.2)", "mkdocs-macros-plugin (==1.3.7)", "mkdocs-material (==9.6.16)", "mkdocs-minify-plugin (==0.8.0)", "mkdocs-redirects (==1.2.2)", "mkdocstrings[python] (==0.30.0)", "mock (==5.2.0)", "mypy (==1.17.1)", "nbclient (==0.10.2)", "nbconvert (==7.16.6)", "nbformat (==5.10.4)", "openai (>=1.99.3)", "pandas (==2.3.1)", "pdoc3 (==0.11.6)", "pillow", "pre-commit (==4.3.0)", "pytest (==8.4.1)", "pytest-asyncio (==1.1.0)", "pytest-cov (==6.2.1)", "pyupgrade-directories (==0.3.0)", "pyyaml (==6.0.2)", "ruff (==0.12.8)", "termcolor (==3.1.0)", "toml (==0.10.2)", "typer (==0.16.0)", "types-decorator", "types-pycurl", "types-python-dateutil", "types-pyyaml", "types-requests", "types-ujson", "uv (==0.8.8)"]
+docs = ["cairosvg", "jinja2 (==3.1.6)", "mcp (>=1.11.0)", "mdx-include (==1.4.2)", "mike (==2.1.3)", "mkdocs-git-revision-date-localized-plugin (==1.4.7)", "mkdocs-glightbox (==0.4.0)", "mkdocs-literate-nav (==0.6.2)", "mkdocs-macros-plugin (==1.3.7)", "mkdocs-material (==9.6.16)", "mkdocs-minify-plugin (==0.8.0)", "mkdocs-redirects (==1.2.2)", "mkdocstrings[python] (==0.30.0)", "nbclient (==0.10.2)", "pdoc3 (==0.11.6)", "pillow", "pyyaml (==6.0.2)", "termcolor (==3.1.0)", "typer (==0.16.0)"]
 duckduckgo = ["duckduckgo-search (>=8.0.2)"]
 flaml = ["flaml", "numpy (>=1.24.0,<2.0.0) ; python_version < \"3.13\"", "numpy (>=2.1) ; python_version >= \"3.13\""]
 gemini = ["google-api-core", "google-auth", "google-cloud-aiplatform", "google-genai (>=1.20.0)", "jsonschema", "pillow"]
@@ -72,35 +72,35 @@ google-search = ["google-api-python-client (>=2.163.0,<3.0)"]
 graph = ["matplotlib", "networkx"]
 graph-rag-falkor-db = ["falkordb (>=1.0.10)", "graphrag-sdk (==0.7.1)"]
 groq = ["groq (>=0.9.0)"]
-interop = ["crewai[tools] (>=0.76,<1) ; python_version >= \"3.10\" and python_version < \"3.13\"", "langchain-community (>=0.3.12,<1)", "litellm (<=1.67.1)", "pydantic-ai (==0.0.31)", "weaviate-client (>=4,<5) ; python_version >= \"3.10\" and python_version < \"3.13\""]
-interop-crewai = ["crewai[tools] (>=0.76,<1) ; python_version >= \"3.10\" and python_version < \"3.13\"", "litellm (<=1.67.1)", "weaviate-client (>=4,<5) ; python_version >= \"3.10\" and python_version < \"3.13\""]
+interop = ["crewai[tools] (>=0.76,<1) ; python_version >= \"3.10\" and python_version < \"3.13\"", "langchain-community (>=0.3.12,<1)", "litellm (<=1.75.5.post1)", "pydantic-ai (==0.6.2)", "weaviate-client (>=4,<5) ; python_version >= \"3.10\" and python_version < \"3.13\""]
+interop-crewai = ["crewai[tools] (>=0.76,<1) ; python_version >= \"3.10\" and python_version < \"3.13\"", "litellm (<=1.75.5.post1)", "weaviate-client (>=4,<5) ; python_version >= \"3.10\" and python_version < \"3.13\""]
 interop-langchain = ["langchain-community (>=0.3.12,<1)"]
-interop-pydantic-ai = ["pydantic-ai (==0.0.31)"]
+interop-pydantic-ai = ["pydantic-ai (==0.6.2)"]
 jupyter-executor = ["ipykernel (>=6.29.0)", "jupyter-client (>=8.6.0)", "jupyter-kernel-gateway", "requests", "websocket-client"]
-lint = ["codespell (==2.4.1)", "pyupgrade-directories (==0.3.0)", "ruff (==0.11.6)"]
+lint = ["codespell (==2.4.1)", "pyupgrade-directories (==0.3.0)", "ruff (==0.12.8)"]
 lmm = ["pillow", "replicate"]
 long-context = ["llmlingua (<0.3)"]
 mathchat = ["sympy", "wolframalpha"]
-mcp = ["mcp (>=1.9.4) ; python_version >= \"3.10\""]
+mcp = ["mcp (>=1.11.0)"]
 mcp-proxy-gen = ["fastapi (>=0.112,<1)", "fastapi-code-generator (>=0.5.4)", "pyyaml", "requests", "typer"]
 mistral = ["mistralai (>=1.0.1)"]
-neo4j = ["docx2txt (==0.9)", "llama-index (>=0.12,<1)", "llama-index-graph-stores-neo4j (==0.4.6)", "llama-index-readers-web (==0.3.9)"]
+neo4j = ["docx2txt (==0.9)", "llama-index (>=0.12,<1)", "llama-index-graph-stores-neo4j (==0.5.0)", "llama-index-readers-web (==0.5.0)"]
 ollama = ["fix-busted-json (>=0.0.18)", "ollama (>=0.4.7)"]
-openai = ["openai (>=1.87.0)"]
-openai-realtime = ["openai (>=1.87.0)", "openai[realtime]"]
-rag = ["chromadb (>=0.5,<1)", "docling (>=2.15.1,<3)", "llama-index (>=0.12,<1)", "llama-index-embeddings-huggingface (==0.5.3)", "llama-index-llms-langchain (==0.6.1)", "llama-index-vector-stores-chroma (==0.4.1)", "llama-index-vector-stores-mongodb (==0.6.0)", "requests (>=2.32.3,<3)", "selenium (>=4.28.1,<5)", "webdriver-manager (==4.0.2)"]
+openai = ["openai (>=1.99.3)"]
+openai-realtime = ["openai (>=1.99.3)", "openai[realtime]"]
+rag = ["chromadb (>=0.5,<2)", "docling (>=2.15.1,<3)", "llama-index (>=0.12,<1)", "llama-index-embeddings-huggingface (==0.6.0)", "llama-index-llms-langchain (==0.7.0)", "llama-index-vector-stores-chroma (==0.4.1)", "llama-index-vector-stores-mongodb (==0.8.0)", "requests (>=2.32.3,<3)", "selenium (>=4.28.1,<5)", "webdriver-manager (==4.0.2)"]
 redis = ["redis"]
-retrievechat = ["beautifulsoup4", "chromadb (==0.6.3)", "ipython", "markdownify", "protobuf (==5.29.3)", "pypdf", "sentence-transformers (<=4.1.0)"]
-retrievechat-couchbase = ["beautifulsoup4", "chromadb (==0.6.3)", "couchbase (>=4.3.0)", "ipython", "markdownify", "numpy", "protobuf (==5.29.3)", "pypdf", "sentence-transformers (<=4.1.0)"]
-retrievechat-mongodb = ["beautifulsoup4", "chromadb (==0.6.3)", "ipython", "markdownify", "numpy", "protobuf (==5.29.3)", "pymongo (>=4.0.0)", "pypdf", "sentence-transformers (<=4.1.0)"]
-retrievechat-pgvector = ["beautifulsoup4", "chromadb (==0.6.3)", "ipython", "markdownify", "pgvector (>=0.2.5)", "protobuf (==5.29.3)", "psycopg (>=3.1.18) ; platform_system == \"Linux\"", "psycopg[binary] (>=3.1.18) ; platform_system == \"Windows\" or platform_system == \"Darwin\"", "pypdf", "sentence-transformers (<=4.1.0)"]
-retrievechat-qdrant = ["beautifulsoup4", "chromadb (==0.6.3)", "fastembed (>=0.3.1)", "ipython", "markdownify", "protobuf (==5.29.3)", "pypdf", "qdrant-client", "sentence-transformers (<=4.1.0)"]
+retrievechat = ["beautifulsoup4", "chromadb (==1.0.16)", "ipython", "markdownify", "protobuf (==6.31.1)", "pypdf", "sentence-transformers (<=5.1.0)"]
+retrievechat-couchbase = ["beautifulsoup4", "chromadb (==1.0.16)", "couchbase (>=4.3.0)", "ipython", "markdownify", "numpy", "protobuf (==6.31.1)", "pypdf", "sentence-transformers (<=5.1.0)"]
+retrievechat-mongodb = ["beautifulsoup4", "chromadb (==1.0.16)", "ipython", "markdownify", "numpy", "protobuf (==6.31.1)", "pymongo (>=4.0.0)", "pypdf", "sentence-transformers (<=5.1.0)"]
+retrievechat-pgvector = ["beautifulsoup4", "chromadb (==1.0.16)", "ipython", "markdownify", "pgvector (>=0.2.5)", "protobuf (==6.31.1)", "psycopg (>=3.1.18) ; platform_system == \"Linux\"", "psycopg[binary] (>=3.1.18) ; platform_system == \"Windows\" or platform_system == \"Darwin\"", "pypdf", "sentence-transformers (<=5.1.0)"]
+retrievechat-qdrant = ["beautifulsoup4", "chromadb (==1.0.16)", "fastembed (>=0.3.1)", "ipython", "markdownify", "protobuf (==6.31.1)", "pypdf", "qdrant-client", "sentence-transformers (<=5.1.0)"]
 tavily = ["tavily-python (>=0.7.4)"]
 teachable = ["chromadb"]
-test = ["dirty-equals (==0.9.0)", "fastapi (==0.115.12)", "ipykernel (==6.29.5)", "mock (==5.2.0)", "nbconvert (==7.16.6)", "nbformat (==5.10.4)", "pandas (==2.2.3)", "pytest (==8.3.5)", "pytest-asyncio (==0.26.0)", "pytest-cov (==6.1.1)"]
+test = ["dirty-equals (==0.9.0)", "fastapi (==0.116.1)", "ipykernel (==6.30.1)", "mcp (>=1.11.0)", "mock (==5.2.0)", "nbconvert (==7.16.6)", "nbformat (==5.10.4)", "pandas (==2.3.1)", "pytest (==8.4.1)", "pytest-asyncio (==1.1.0)", "pytest-cov (==6.2.1)"]
 together = ["together (>=1.2)"]
 twilio = ["fastapi (>=0.115.0,<1)", "twilio (>=9.3.2)", "uvicorn (>=0.30.6,<1)"]
-types = ["dirty-equals (==0.9.0)", "fastapi (==0.115.12)", "ipykernel (==6.29.5)", "mock (==5.2.0)", "mypy (==1.15.0)", "nbconvert (==7.16.6)", "nbformat (==5.10.4)", "openai (>=1.87.0)", "pandas (==2.2.3)", "pytest (==8.3.5)", "pytest-asyncio (==0.26.0)", "pytest-cov (==6.1.1)"]
+types = ["dirty-equals (==0.9.0)", "fastapi (==0.116.1)", "ipykernel (==6.30.1)", "mcp (>=1.11.0)", "mock (==5.2.0)", "mypy (==1.17.1)", "nbconvert (==7.16.6)", "nbformat (==5.10.4)", "openai (>=1.99.3)", "pandas (==2.3.1)", "pytest (==8.4.1)", "pytest-asyncio (==1.1.0)", "pytest-cov (==6.2.1)", "types-decorator", "types-pycurl", "types-python-dateutil", "types-pyyaml", "types-requests", "types-ujson"]
 websockets = ["websockets (>=14.0,<16)"]
 websurfer = ["beautifulsoup4", "markdownify", "pathvalidate", "pdfminer-six"]
 wikipedia = ["wikipedia-api (>=0.8.1,<1.0)"]
@@ -197,14 +197,14 @@ vertex = ["google-auth[requests] (>=2,<3)"]
 
 [[package]]
 name = "anyio"
-version = "4.9.0"
-description = "High level compatibility layer for multiple asynchronous event loop implementations"
+version = "4.10.0"
+description = "High-level concurrency and networking framework on top of asyncio or Trio"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "anyio-4.9.0-py3-none-any.whl", hash = "sha256:9f76d541cad6e36af7beb62e978876f3b41e3e04f2c1fbf0884604c0a9c4d93c"},
-    {file = "anyio-4.9.0.tar.gz", hash = "sha256:673c0c244e15788651a4ff38710fea9675823028a6f08a5eda409e0c9840a028"},
+    {file = "anyio-4.10.0-py3-none-any.whl", hash = "sha256:60e474ac86736bbfd6f210f7a61218939c318f43f9972497381f1c5e930ed3d1"},
+    {file = "anyio-4.10.0.tar.gz", hash = "sha256:3f3fae35c96039744587aa5b8371e7e8e603c0702999535961dd336026973ba6"},
 ]
 
 [package.dependencies]
@@ -214,8 +214,6 @@ sniffio = ">=1.1"
 typing_extensions = {version = ">=4.5", markers = "python_version < \"3.13\""}
 
 [package.extras]
-doc = ["Sphinx (>=8.2,<9.0)", "packaging", "sphinx-autodoc-typehints (>=1.2.0)", "sphinx_rtd_theme"]
-test = ["anyio[trio]", "blockbuster (>=1.5.23)", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypothesis (>=4.0)", "psutil (>=5.9)", "pytest (>=7.0)", "trustme", "truststore (>=0.9.1) ; python_version >= \"3.10\"", "uvloop (>=0.21) ; platform_python_implementation == \"CPython\" and platform_system != \"Windows\" and python_version < \"3.14\""]
 trio = ["trio (>=0.26.1)"]
 
 [[package]]
@@ -307,78 +305,78 @@ cryptography = "*"
 
 [[package]]
 name = "autogen"
-version = "0.9.3"
+version = "0.9.9"
 description = "Alias package for ag2"
 optional = false
-python-versions = "<3.14,>=3.9"
+python-versions = "<3.14,>=3.10"
 groups = ["main"]
 files = [
-    {file = "autogen-0.9.3-py3-none-any.whl", hash = "sha256:324fbd9005728673c8750202eaccd125b49dbabc3ffcf490fcd533cb89e722f8"},
-    {file = "autogen-0.9.3.tar.gz", hash = "sha256:e144c1b5fdd26986efde080761fc868d4660a50d0a3cdeba840630a2f7e2931a"},
+    {file = "autogen-0.9.9-py3-none-any.whl", hash = "sha256:47cb422b23fb596031325e4859b0eff3eb7eb194fd0321661a1ba20314a197a3"},
+    {file = "autogen-0.9.9.tar.gz", hash = "sha256:2d80082c70725a3eb42f82b600a82a49fddc76ac7c9cc993c316a43a43704480"},
 ]
 
 [package.dependencies]
-ag2 = "0.9.3"
+ag2 = "0.9.9"
 
 [package.extras]
-anthropic = ["ag2[anthropic] (==0.9.3)"]
-autobuild = ["ag2[autobuild] (==0.9.3)"]
-bedrock = ["ag2[bedrock] (==0.9.3)"]
-blendsearch = ["ag2[blendsearch] (==0.9.3)"]
-browser-use = ["ag2[browser-use] (==0.9.3)"]
-captainagent = ["ag2[captainagent] (==0.9.3)"]
-cerebras = ["ag2[cerebras] (==0.9.3)"]
-cohere = ["ag2[cohere] (==0.9.3)"]
-commsagent-discord = ["ag2[commsagent-discord] (==0.9.3)"]
-commsagent-slack = ["ag2[commsagent-slack] (==0.9.3)"]
-commsagent-telegram = ["ag2[commsagent-telegram] (==0.9.3)"]
-cosmosdb = ["ag2[cosmosdb] (==0.9.3)"]
-crawl4ai = ["ag2[crawl4ai] (==0.9.3)"]
-deepseek = ["ag2[deepseek] (==0.9.3)"]
-dev = ["ag2[dev] (==0.9.3)"]
-docs = ["ag2[docs] (==0.9.3)"]
-duckduckgo = ["ag2[duckduckgo] (==0.9.3)"]
-flaml = ["ag2[flaml] (==0.9.3)"]
-gemini = ["ag2[gemini] (==0.9.3)"]
-gemini-realtime = ["ag2[gemini-realtime] (==0.9.3)"]
-google-api = ["ag2[google-api] (==0.9.3)"]
-google-client = ["ag2[google-client] (==0.9.3)"]
-google-search = ["ag2[google-search] (==0.9.3)"]
-graph = ["ag2[graph] (==0.9.3)"]
-graph-rag-falkor-db = ["ag2[graph-rag-falkor-db] (==0.9.3)"]
-groq = ["ag2[groq] (==0.9.3)"]
-interop = ["ag2[interop] (==0.9.3)"]
-interop-crewai = ["ag2[interop-crewai] (==0.9.3)"]
-interop-langchain = ["ag2[interop-langchain] (==0.9.3)"]
-interop-pydantic-ai = ["ag2[interop-pydantic-ai] (==0.9.3)"]
-jupyter-executor = ["ag2[jupyter-executor] (==0.9.3)"]
-lint = ["ag2[lint] (==0.9.3)"]
-lmm = ["ag2[lmm] (==0.9.3)"]
-long-context = ["ag2[long-context] (==0.9.3)"]
-mathchat = ["ag2[mathchat] (==0.9.3)"]
-mcp = ["ag2[mcp] (==0.9.3)"]
-mcp-proxy-gen = ["ag2[mcp-proxy-gen] (==0.9.3)"]
-mistral = ["ag2[mistral] (==0.9.3)"]
-neo4j = ["ag2[neo4j] (==0.9.3)"]
-ollama = ["ag2[ollama] (==0.9.3)"]
-openai = ["ag2[openai] (==0.9.3)"]
-openai-realtime = ["ag2[openai-realtime] (==0.9.3)"]
-rag = ["ag2[rag] (==0.9.3)"]
-redis = ["ag2[redis] (==0.9.3)"]
-retrievechat = ["ag2[retrievechat] (==0.9.3)"]
-retrievechat-couchbase = ["ag2[retrievechat-couchbase] (==0.9.3)"]
-retrievechat-mongodb = ["ag2[retrievechat-mongodb] (==0.9.3)"]
-retrievechat-pgvector = ["ag2[retrievechat-pgvector] (==0.9.3)"]
-retrievechat-qdrant = ["ag2[retrievechat-qdrant] (==0.9.3)"]
-tavily = ["ag2[tavily] (==0.9.3)"]
-teachable = ["ag2[teachable] (==0.9.3)"]
-test = ["ag2[test] (==0.9.3)"]
-together = ["ag2[together] (==0.9.3)"]
-twilio = ["ag2[twilio] (==0.9.3)"]
-types = ["ag2[types] (==0.9.3)"]
-websockets = ["ag2[websockets] (==0.9.3)"]
-websurfer = ["ag2[websurfer] (==0.9.3)"]
-wikipedia = ["ag2[wikipedia] (==0.9.3)"]
+anthropic = ["ag2[anthropic] (==0.9.9)"]
+autobuild = ["ag2[autobuild] (==0.9.9)"]
+bedrock = ["ag2[bedrock] (==0.9.9)"]
+blendsearch = ["ag2[blendsearch] (==0.9.9)"]
+browser-use = ["ag2[browser-use] (==0.9.9)"]
+captainagent = ["ag2[captainagent] (==0.9.9)"]
+cerebras = ["ag2[cerebras] (==0.9.9)"]
+cohere = ["ag2[cohere] (==0.9.9)"]
+commsagent-discord = ["ag2[commsagent-discord] (==0.9.9)"]
+commsagent-slack = ["ag2[commsagent-slack] (==0.9.9)"]
+commsagent-telegram = ["ag2[commsagent-telegram] (==0.9.9)"]
+cosmosdb = ["ag2[cosmosdb] (==0.9.9)"]
+crawl4ai = ["ag2[crawl4ai] (==0.9.9)"]
+deepseek = ["ag2[deepseek] (==0.9.9)"]
+dev = ["ag2[dev] (==0.9.9)"]
+docs = ["ag2[docs] (==0.9.9)"]
+duckduckgo = ["ag2[duckduckgo] (==0.9.9)"]
+flaml = ["ag2[flaml] (==0.9.9)"]
+gemini = ["ag2[gemini] (==0.9.9)"]
+gemini-realtime = ["ag2[gemini-realtime] (==0.9.9)"]
+google-api = ["ag2[google-api] (==0.9.9)"]
+google-client = ["ag2[google-client] (==0.9.9)"]
+google-search = ["ag2[google-search] (==0.9.9)"]
+graph = ["ag2[graph] (==0.9.9)"]
+graph-rag-falkor-db = ["ag2[graph-rag-falkor-db] (==0.9.9)"]
+groq = ["ag2[groq] (==0.9.9)"]
+interop = ["ag2[interop] (==0.9.9)"]
+interop-crewai = ["ag2[interop-crewai] (==0.9.9)"]
+interop-langchain = ["ag2[interop-langchain] (==0.9.9)"]
+interop-pydantic-ai = ["ag2[interop-pydantic-ai] (==0.9.9)"]
+jupyter-executor = ["ag2[jupyter-executor] (==0.9.9)"]
+lint = ["ag2[lint] (==0.9.9)"]
+lmm = ["ag2[lmm] (==0.9.9)"]
+long-context = ["ag2[long-context] (==0.9.9)"]
+mathchat = ["ag2[mathchat] (==0.9.9)"]
+mcp = ["ag2[mcp] (==0.9.9)"]
+mcp-proxy-gen = ["ag2[mcp-proxy-gen] (==0.9.9)"]
+mistral = ["ag2[mistral] (==0.9.9)"]
+neo4j = ["ag2[neo4j] (==0.9.9)"]
+ollama = ["ag2[ollama] (==0.9.9)"]
+openai = ["ag2[openai] (==0.9.9)"]
+openai-realtime = ["ag2[openai-realtime] (==0.9.9)"]
+rag = ["ag2[rag] (==0.9.9)"]
+redis = ["ag2[redis] (==0.9.9)"]
+retrievechat = ["ag2[retrievechat] (==0.9.9)"]
+retrievechat-couchbase = ["ag2[retrievechat-couchbase] (==0.9.9)"]
+retrievechat-mongodb = ["ag2[retrievechat-mongodb] (==0.9.9)"]
+retrievechat-pgvector = ["ag2[retrievechat-pgvector] (==0.9.9)"]
+retrievechat-qdrant = ["ag2[retrievechat-qdrant] (==0.9.9)"]
+tavily = ["ag2[tavily] (==0.9.9)"]
+teachable = ["ag2[teachable] (==0.9.9)"]
+test = ["ag2[test] (==0.9.9)"]
+together = ["ag2[together] (==0.9.9)"]
+twilio = ["ag2[twilio] (==0.9.9)"]
+types = ["ag2[types] (==0.9.9)"]
+websockets = ["ag2[websockets] (==0.9.9)"]
+websurfer = ["ag2[websurfer] (==0.9.9)"]
+wikipedia = ["ag2[wikipedia] (==0.9.9)"]
 
 [[package]]
 name = "autogen-agentchat"
@@ -682,6 +680,19 @@ typing-extensions = ">=4.6.0"
 
 [package.extras]
 aio = ["azure-core[aio] (>=1.30.0)"]
+
+[[package]]
+name = "backports-asyncio-runner"
+version = "1.2.0"
+description = "Backport of asyncio.Runner, a context manager that controls event loop life cycle."
+optional = false
+python-versions = "<3.11,>=3.8"
+groups = ["main"]
+markers = "python_version == \"3.10\""
+files = [
+    {file = "backports_asyncio_runner-1.2.0-py3-none-any.whl", hash = "sha256:0da0a936a8aeb554eccb426dc55af3ba63bcdc69fa1a600b5bb305413a4477b5"},
+    {file = "backports_asyncio_runner-1.2.0.tar.gz", hash = "sha256:a5aa7b2b7d8f8bfcaa2b57313f70792df84e32a2a746f585213373f900b42162"},
+]
 
 [[package]]
 name = "beautifulsoup4"
@@ -2683,6 +2694,18 @@ test = ["jaraco.test (>=5.4)", "pytest (>=6,!=8.1.*)", "zipp (>=3.17)"]
 type = ["pytest-mypy"]
 
 [[package]]
+name = "iniconfig"
+version = "2.1.0"
+description = "brain-dead simple config-ini parsing"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "iniconfig-2.1.0-py3-none-any.whl", hash = "sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760"},
+    {file = "iniconfig-2.1.0.tar.gz", hash = "sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7"},
+]
+
+[[package]]
 name = "isodate"
 version = "0.7.2"
 description = "An ISO 8601 date/time/duration parser and formatter"
@@ -4336,6 +4359,22 @@ greenlet = ">=3.1.1,<4.0.0"
 pyee = ">=13,<14"
 
 [[package]]
+name = "pluggy"
+version = "1.6.0"
+description = "plugin and hook calling mechanisms for python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pluggy-1.6.0-py3-none-any.whl", hash = "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746"},
+    {file = "pluggy-1.6.0.tar.gz", hash = "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3"},
+]
+
+[package.extras]
+dev = ["pre-commit", "tox"]
+testing = ["coverage", "pytest", "pytest-benchmark"]
+
+[[package]]
 name = "polyfactory"
 version = "2.22.1"
 description = "Mock data generation factories"
@@ -4765,6 +4804,50 @@ files = [
 
 [package.extras]
 dev = ["build", "flake8", "mypy", "pytest", "twine"]
+
+[[package]]
+name = "pytest"
+version = "8.4.1"
+description = "pytest: simple powerful testing with Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pytest-8.4.1-py3-none-any.whl", hash = "sha256:539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7"},
+    {file = "pytest-8.4.1.tar.gz", hash = "sha256:7c67fd69174877359ed9371ec3af8a3d2b04741818c51e5e99cc1742251fa93c"},
+]
+
+[package.dependencies]
+colorama = {version = ">=0.4", markers = "sys_platform == \"win32\""}
+exceptiongroup = {version = ">=1", markers = "python_version < \"3.11\""}
+iniconfig = ">=1"
+packaging = ">=20"
+pluggy = ">=1.5,<2"
+pygments = ">=2.7.2"
+tomli = {version = ">=1", markers = "python_version < \"3.11\""}
+
+[package.extras]
+dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests", "setuptools", "xmlschema"]
+
+[[package]]
+name = "pytest-asyncio"
+version = "1.1.0"
+description = "Pytest support for asyncio"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pytest_asyncio-1.1.0-py3-none-any.whl", hash = "sha256:5fe2d69607b0bd75c656d1211f969cadba035030156745ee09e7d71740e58ecf"},
+    {file = "pytest_asyncio-1.1.0.tar.gz", hash = "sha256:796aa822981e01b68c12e4827b8697108f7205020f24b5793b3c41555dab68ea"},
+]
+
+[package.dependencies]
+backports-asyncio-runner = {version = ">=1.1,<2", markers = "python_version < \"3.11\""}
+pytest = ">=8.2,<9"
+
+[package.extras]
+docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1)"]
+testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
 
 [[package]]
 name = "python-dateutil"
@@ -6624,4 +6707,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "bd9a0a108a941837b1f3237b93394421e2811339bc6616a590ed553a7b30e146"
+content-hash = "376385e37b9fe1309f43f67b21b0d8091c96a02260230a055fe284a14bc9ec47"
