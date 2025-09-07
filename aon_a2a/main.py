@@ -14,8 +14,12 @@ from litestar.serialization import encode_msgpack
 from litestar.di import Provide
 
 # Litestar - manual auth setup
-
 class AONA2A(Controller):
+
+    """
+        AONA2A(Advanced Open Network Agent to Agent)
+        Workflow
+    """
 
     path = "/test"
 
@@ -67,8 +71,8 @@ class AONA2A(Controller):
         async def my_generator():
             res = "hello world"
             for t in res:
-                await asyncio.sleep(0.01)
-                yield encode_msgpack({"current_time": 10})
+                await asyncio.sleep(0.1)
+                yield encode_msgpack({"current_time": t})
         return Stream(my_generator(), media_type="text/plain")
 
 
