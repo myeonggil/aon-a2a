@@ -147,7 +147,7 @@ group_chat = GroupChat(
     agents=[user_proxy, stock_assistant, news_assistant],
     messages=[],
     max_round=10,
-    allow_repeat_speaker=True,
+    allow_repeat_speaker=False,
     # speaker_selection_method="round_robin"
 )
 
@@ -179,10 +179,10 @@ res = user_proxy.initiate_chat(
     # max_turns=10
 )
 
-# result_messages = []
-# for msg in group_chat.messages[-3:]:  # 마지막 3개 메시지
-#     if msg.get("name") in ["stock_assistant", "news_assistant", "generator_assistant"]:
-#         result_messages.append(f"{msg['name']}: {msg['content']}")
+result_messages = []
+for msg in group_chat.messages[-3:]:  # 마지막 3개 메시지
+    if msg.get("name") in ["stock_assistant", "news_assistant", "generator_assistant"]:
+        result_messages.append(f"{msg['name']}: {msg['content']}")
 
 # print("!" * 100)
 # print("\n\n".join(result_messages))
