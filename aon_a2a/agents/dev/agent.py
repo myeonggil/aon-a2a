@@ -1,14 +1,4 @@
-############# Try it! #############
-# First, LLM Agent register
-# Second, Is possible Sock API?
-# Third, Is possible News API?
-# Fourth, Is possible checking volatility?
-# Last, Is possible reporting of result?
-
 from aon_a2a.configs import config
-from aon_a2a.agents.stock.models import AssistantPrompt
-
-from typing import Annotated
 
 from autogen import (
     AssistantAgent,
@@ -127,35 +117,29 @@ class Agent(AgentInterface):
         def decorator(func: Callable):
             sig = inspect.signature(func)  # 함수 시그니처 가져오기
             if inspect.iscoroutinefunction(func):
-                # @self.user_proxy.register_for_execution()
-                # @assistant.register_for_llm(description=description)
+                @self.user_proxy.register_for_execution()
+                @assistant.register_for_llm(description=description)
                 @functools.wraps(func)
                 async def async_wrapper(*args, **kwargs):
-                    # for name, param in sig.parameters.items():
-                    #     if param.default is not inspect.Parameter.empty:
-                    #         print(f"  {name} = {param.default}")
                     return await func(**kwargs)
-                     # 에이전트를 함수의 속성으로 추가
-                wrapper = async_wrapper
-                wrapper.agent = agent
-                wrapper.agent_type = "assistant"
-                return wrapper
+                return async_wrapper
             else:
                 @self.user_proxy.register_for_execution()
                 @assistant.register_for_llm(description=description)
                 @functools.wraps(func)
                 def wrapper(*args, **kwargs):
-                    # for name, param in sig.parameters.items():
-                    #     if param.default is not inspect.Parameter.empty:
-                    #         print(f"  {name} = {param.default}")
                     return func(*args, **kwargs)
                 return wrapper
         return decorator
 
     def create_group_chat_manager(self):
         # 그룹 채팅 생성
+        agents = [unique_assistant.assistant for unique_assistant in self.assistants]
+        if not agents or not self.user_proxy:
+            raise Exception("Register assistant or user proxy")
+        agents.append(self.user_proxy)
         self.group_chat = GroupChat(
-            agents=[unique_assistant.assistant for unique_assistant in self.assistants],
+            agents=agents,
             messages=[],
             max_round=10,
             allow_repeat_speaker=False,
@@ -169,7 +153,15 @@ class Agent(AgentInterface):
             silent=True
         )
 
-    def start_test(self, prompt: str = None):
+    def start_test(
+            self,
+            prompt: str = None,
+            max_turns: int = None,
+            summary_method: str = "last_msg",
+        ):
+        """
+        summary_method: last_msg or reflection_with_llm
+        """
         res = self.user_proxy.initiate_chat(
             self.manager,
             message="""
@@ -178,66 +170,7 @@ class Agent(AgentInterface):
 
                 <query>안녕?</query>
             """,
-            summary_method="reflection_with_llm",
-            # summary_method="last_msg",
-            max_turns=4
+            summary_method=summary_method,
+            max_turns=max_turns
         )
         return res
-
-# generator_assistant = AssistantAgent(
-#     name="generator_assistant",
-#     system_message="""
-#         너는 금융 분석 리포트 작성 전문가야. 입력된 주가 분석 정보와 관련 뉴스 요약을 바탕으로 
-#         전문적인 PDF 리포트를 작성해줘. 문서는 다음과 같은 구조를 따라:
-#         1. 기업 개요
-#         2. 분석 대상 기간
-#         3. 주가 상승/하락 요약
-#         4. 주요 뉴스와 해석
-#         5. 결론 및 인사이트
-#         리포트는 그래프와 표를 포함하고, 한글 또는 영어로 포맷팅 가능해야 해.
-#     """,
-#     llm_config=llm_config,
-# )
-
-agent = Agent(None)
-agent.register_assistant(
-    "first",
-    "first",
-    """
-        너는 채팅에 도움을 주는 어시스턴트야
-        first_reply라는 함수를 사용해
-        잘 답변해줘
-    """
-)
-agent.register_assistant(
-    "second",
-    "second",
-    """
-        너는 채팅에 잘 답변해 주는 어시스턴트야
-        second_reply라는 함수를 사용해
-        잘 답변해줘
-    """
-)
-agent.set_user_proxy()
-agent.create_group_chat_manager()
-
-
-@agent.register_func_tool("first", "chatting bot one")
-async def first_reply(
-    reply: Annotated[str, "about reply in Korea"],
-):
-    return f"나의 대답은 {reply}"
-
-@agent.register_func_tool("second", "chatting next bot two")
-async def second_reply(
-    reply: Annotated[str, "about reply in Korea"],
-):
-    return f"나의 대답은 {reply}"
-
-res = agent.start_test()
-for msg in agent.group_chat.messages[-3:]:  # 마지막 3개 메시지
-    if msg.get("name"):
-        print(f"{msg['name']}: {msg['content']}")
-
-for data in res.chat_history:
-    print(data)
