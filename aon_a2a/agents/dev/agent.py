@@ -1,5 +1,5 @@
 from aon_a2a.configs import config
-from aon_a2a.agents.dev.interfaces import AgentInterface
+from aon_a2a.agents.dev.interfaces import IAgent
 from aon_a2a.agents.dev.models import (
     ModelConfig,
     UniqueAssistant,
@@ -20,7 +20,7 @@ import inspect
 import functools
 
 
-class Agent(AgentInterface):
+class Agent(IAgent):
     def __init__(self, model_config: ModelConfig):
         self.llm_config = LLMConfig(
             model="llama-3.3-70b-versatile",
@@ -35,9 +35,6 @@ class Agent(AgentInterface):
         self.user_proxy = None
         self.group_chat = None
         self.manager = None
-
-    def _search_doc(self, query: str):
-        return ""
 
     def register_assistant(
             self,

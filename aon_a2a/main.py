@@ -6,6 +6,7 @@ from aon_a2a.database.connection import AsyncSession, get_session
 from aon_a2a.auth import AONAuthenticationMiddleware
 from aon_a2a.models import User, AuthResponse, ChatResponse
 from aon_a2a.utils import create_token
+from aon_a2a.agents.dev.router import DevAgentRouter
 
 from litestar import Litestar, get, post, Controller, Request
 from litestar.middleware import DefineMiddleware
@@ -76,4 +77,4 @@ class AONA2A(Controller):
         return Stream(my_generator(), media_type="text/plain")
 
 
-app = Litestar(route_handlers=[AONA2A])
+app = Litestar(route_handlers=[AONA2A, DevAgentRouter])
