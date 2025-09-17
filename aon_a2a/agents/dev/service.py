@@ -6,3 +6,10 @@ class DevelopmentKitService:
     def __init__(self):
         self.development_kit_repository = development_kit_repository
         self.agent = Agent()
+
+    async def get_agent_response(self):
+        pass
+
+    async def get_agent_stream(self):
+        # How to make stream agent response?
+        pass

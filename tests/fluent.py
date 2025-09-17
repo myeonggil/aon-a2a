@@ -1,78 +1,76 @@
-# # import collections
-
-# # from typing import Sequence, TypeVar, Iterable, Union
-
-# # T = TypeVar("T", bound=[str])
-
-
-# # def batch_iter(data: Sequence[T], size: int) -> Iterable[Sequence[T]]:
-# #     for i in range(0, len(data), size):
-# #         yield data[i:i + size]
-
-# # for data in batch_iter(['1.0', 1.2], 2):
-# #     print(data)
-
-
-# # Card = collections.namedtuple('Card', ['rank', 'suit'])
-
-# # card = Card(rank='2', suit='Spad')
-
-# # class Deck:
-# #     def __init__(self, cards: list[Card]):
-# #         self.decks = cards
-
-# #     def __len__(self):
-# #         return len(self.decks)
-
-# #     def __getitem__(self, position):
-# #         return self.decks[position]
-
-# #     def __repr__(self):
-# #         return f"Cards"
-
-# # ranks = ['J', 'Q', 'K', 'A']
-# # suits = ['Spade', 'Heart', 'A', 'B']
-# # cards = [Card(rank=rank, suit=suit) for rank in ranks for suit in suits]
-# # deck = Deck(cards=cards)
-
-# from typing import Callable
-# from functools import wraps
-
-# from typing import Callable
-# from functools import wraps
-
-# import inspect
+from typing import (
+    Protocol,
+    Sequence,
+    Iterable,
+    MutableMapping,
+    MutableSequence,
+    MutableSet,
+    NoReturn,
+    TypeAlias,
+    TypeVar
+)
+from random import shuffle
 
 
-# class Test:
-#     def register_func_tool(self, description: str):
-#         def decorator(func: Callable):
-#             sig = inspect.signature(func)  # 함수 시그니처 가져오기
-#             @wraps(func)
-#             def wrapper(*args, **kwargs):
-#                 print(f"Description: {description}")
-#                 print("Default params:")
-#                 for name, param in sig.parameters.items():
-#                     if param.default is not inspect.Parameter.empty:
-#                         print(f"  {name} = {param.default}")
-#                 return func(*args, **kwargs)
-#             return wrapper
-#         return decorator
+TestType = TypeVar("TestType", bound=tuple[int, ...])
 
 
-# test = Test()
+class Spam(Protocol):
+    def __init__(self, n: int):
+        self.n = n
 
-# @test.register_func_tool(description='asd')
-# def my_func(x: int = 1, y: int = 2, greet="hello"):
-#     # print(f"{greet}, x + y = {x + y}")
-#     ...
+    def __repr__(self):
+        return f"Spam({self.n})"
+
+    def __lt__(self, other: 'Spam') -> bool:
+        return self.n < other.n
 
 
-# # 함수 호출
-# # my_func(3, 5, greet="hi")
-# # my_func()
+spams = [Spam(n) for n in range(1, 10)]
+shuffle(spams)
 
-arr = [1, 2, 3, 4, 5]
+print(spams)
+print(sorted(spams, reverse=False))
 
-res = filter(lambda x: x == 6, arr)
-print(next(res, None))
+
+def tag(name: str, /, *contains, _class: str | None = None, **attrs: str) -> str:
+    print(name, contains)
+
+tag("img", 1, 2)
+
+
+def test() -> tuple[int, ...]:
+    return [1, 2, 3, 4]
+
+print(type(test()))
+
+
+def double(x):
+    return x * 2
+
+
+class Sample:
+    def __init__(self, x):
+        self.x = x
+
+    def __mul__(self, x):
+        return self.x * x
+
+sample = Sample(100)
+print(double(sample))
+
+
+def f1():
+    series = []
+    def inner(x):
+        series.append(x)
+        num = sum(series)
+        avg = num / len(series)
+        return avg
+    return inner
+
+f = f1()
+f(10)
+res = f(11)
+from dis import dis
+print(dis(f))

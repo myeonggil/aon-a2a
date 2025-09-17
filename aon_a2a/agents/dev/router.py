@@ -32,10 +32,10 @@ class DevAgentRouter(Controller):
     async def response_chat(
         self,
         # request: Request[User, Any, Any],
-        session: DevelopmentKitService,
+        dev_kit_service: DevelopmentKitService,
     ) -> ChatResponse:
-        print(session.development_kit_repository)
-        return ChatResponse(content="Hello world")
+        response = await dev_kit_service.get_agent_response()
+        return response
 
     @post(
         path="/stream",
@@ -47,11 +47,6 @@ class DevAgentRouter(Controller):
     async def stream_chat(
         self,
         # request: Request[User, Any, Any],
-        session: DevelopmentKitService,
+        dev_kit_service: DevelopmentKitService,
     ) -> Stream:
-        async def my_generator():
-            res = "hello world"
-            for t in res:
-                await asyncio.sleep(0.1)
-                yield encode_msgpack({"current_time": t})
-        return Stream(my_generator(), media_type="text/plain")
+        return Stream(dev_kit_service.get_agent_stream(), media_type="text/plain")
