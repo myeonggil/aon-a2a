@@ -33,7 +33,7 @@ jobs:
           REPOSITORY: test
           IMAGE_TAG: ${{ steps.get_version.outputs.version }}
         run: |
-          jq '.containerDefinitions[0].image="$REGISTRY/$REPOSITORY:v${{ steps.get_version.outputs.version }}"' Dockerrun.aws.json > tmp.json
+          jq '.containerDefinitions[0].image="${{ env.REGISTRY }}/${{ env.REPOSITORY }}:v${{ steps.get_version.outputs.version }}"' Dockerrun.aws.json > tmp.json
           mv tmp.json Dockerrun.aws.json
 
       - name: Check new package.json
