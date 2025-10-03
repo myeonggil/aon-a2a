@@ -1,0 +1,49 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+
+
+on:
+  push:
+    branches: [ feature/TSK-92 ]
+
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v5
+      - run: pip install toml-cli
+
+      - name: Read version from pyproject.toml
+        id: get_version
+        run: |
+          python - <<EOF
+          import tomllib
+          with open("pyproject.toml", "rb") as f:
+              data = tomllib.load(f)
+          print(f"::set-output name=version::{data['tool']['poetry']['version']}")
+          EOF
+      - name: Get version
+        id: get_version
+        run: |
+          VERSION=$(toml get pyproject.toml tool.poetry.version)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Print version
+        run: echo "Version is ${{ steps.get_version.outputs.version }}"
+      
+      - name: Replace version in Dockerrun.aws.json
+        env:
+          REGISTRY: mgjuAccount
+          REPOSITORY: test
+          IMAGE_TAG: ${{ steps.get_version.outputs.version }}
+        run: |
+          jq '.containerDefinitions[0].image="$REGISTRY/$REPOSITORY:v${{ steps.get_version.outputs.version }}"' Dockerrun.aws.json > tmp.json
+          mv tmp.json Dockerrun.aws.json
+
+      - name: Check new package.json
+        run: cat Dockerrun.aws.json
