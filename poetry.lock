@@ -2823,6 +2823,18 @@ files = [
 ]
 
 [[package]]
+name = "jmespath"
+version = "1.0.1"
+description = "JSON Matching Expressions"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
+    {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
+]
+
+[[package]]
 name = "jsonpatch"
 version = "1.33"
 description = "Apply JSON-Patches (RFC 6902)"
@@ -5929,6 +5941,24 @@ doc = ["sphinx", "sphinx_rtd_theme"]
 test = ["pytest", "ruff"]
 
 [[package]]
+name = "toml-cli"
+version = "0.8.2"
+description = "Command line interface to read and write keys/values to/from toml files"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "toml_cli-0.8.2-py3-none-any.whl", hash = "sha256:7af4679ca04c53ad0f6d300dab26f45a78fedf88e8310305bfe0a8ead37fd000"},
+    {file = "toml_cli-0.8.2.tar.gz", hash = "sha256:ec61fbfe5f0d6f2d6bfd9e1127cad38a797b8685a93589f2e22efd168b0cc866"},
+]
+
+[package.dependencies]
+jmespath = ">=1.0.1"
+regex = ">=2020.7.14"
+tomlkit = ">=0.13.3"
+typer = ">=0.16.0"
+
+[[package]]
 name = "tomli"
 version = "2.2.1"
 description = "A lil' TOML parser"
@@ -5969,6 +5999,18 @@ files = [
     {file = "tomli-2.2.1-cp313-cp313-win_amd64.whl", hash = "sha256:a38aa0308e754b0e3c67e344754dff64999ff9b513e691d0e786265c93583c69"},
     {file = "tomli-2.2.1-py3-none-any.whl", hash = "sha256:cb55c73c5f4408779d0cf3eef9f762b9c9f147a77de7b258bef0a5628adc85cc"},
     {file = "tomli-2.2.1.tar.gz", hash = "sha256:cd45e1dc79c835ce60f7404ec8119f2eb06d38b1deba146f07ced3bbc44505ff"},
+]
+
+[[package]]
+name = "tomlkit"
+version = "0.13.3"
+description = "Style preserving TOML library"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "tomlkit-0.13.3-py3-none-any.whl", hash = "sha256:c89c649d79ee40629a9fda55f8ace8c6a1b42deb912b2a8fd8d942ddadb606b0"},
+    {file = "tomlkit-0.13.3.tar.gz", hash = "sha256:430cf247ee57df2b94ee3fbe588e71d362a941ebb545dec29b53961d61add2a1"},
 ]
 
 [[package]]
@@ -6707,4 +6749,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "376385e37b9fe1309f43f67b21b0d8091c96a02260230a055fe284a14bc9ec47"
+content-hash = "fd06e2d76a41ca91c53c34d128866ece1dd91e2b456509ed656124d34f675775"
